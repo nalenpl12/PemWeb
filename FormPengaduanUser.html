@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pengaduan Infrastruktur</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <form id="Pengaduan">
+        <h2>Form Pengaduan Infrastruktur</h2>
+
+        <div class="form-group">
+            <label for="nama">Nama Pelapor</label>
+            <span class="separator">:</span>
+            <input type="text" id="nama" name="nama" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nohp">No HP</label>
+            <span class="separator">:</span>
+            <input type="tel" id="nohp" name="nohp" required>
+        </div>
+
+        <div class="form-group">
+        <label for="alamat">Alamat Pelapor</label>
+        <span class="separator">:</span>
+        <input type="text" id="alamat" name="alamat" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tanggal">Tanggal Kejadian</label>
+            <span class="separator">:</span>
+            <input type="date" id="tanggal" name="tanggal" required>
+        </div>
+
+        <div calss="form-group">
+            <label for="lokasi">Lokasi Kejadian</label>
+            <span class="separator">:</span>
+            <input type="text" id="lokasi" name="lokasi" required>
+        </div>
+
+        <div class="form-group">
+            <label for="kategori">Jenis Infrastruktur</label>
+            <span class="separator">:</span>
+            <select id="kategori" name="kategori" required>
+                <option value="">- Pilih -</option>
+                <option value="jalan">Jalan</option>
+                <option value="jembatan">Jembatan</option>
+                <option value="saluran">Saluran Air</option>
+                <option value="lampu">Lampu Jalan</option>
+                <option value="fasilitas">Fasilitas Umum</option>
+            </select>
+        </div>
+
+        <div class="form-gorup">
+            <label for="deskripsi">Deskripsi Laporan</label>
+            <span class="separator">:</span>
+            <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea>
+        </div>
+
+        <input type="submit" value="Kirim Aduan">
+    </form>
+
+</body>
+</html>
