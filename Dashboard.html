@@ -8,11 +8,86 @@
 </head>
 
 <body>
-    <h1>Selamat Datang di Aduan Infrastruktur Desa Sukodono</h1>
-    <p>Anda dapat melaporkan aduan infrastruktur yang rusak atau bermasalah di sini.</p>
-    <p>Silakan klik tombol di bawah ini untuk melanjutkan.</p>
-    <a href="FormPengaduanUser.html">Laporkan Aduan</a> <br>
-    <a href="FormStatusPengaduan.html">Status Pengaduan</a>
+    <header>
+        <h1>Selamat Datang di Aduan Infrastruktur Desa Sukodono</h1>
+    </header>
+
+    <div class="container">
+        <p>Anda dapat melaporkan aduan infrastruktur yang rusak atau bermasalah di sini.</p>
+        <p>Silakan klik tombol di bawah ini untuk melanjutkan.</p>
+        <nav>
+            <a class="button" href="FormPengaduanUser.html">Laporkan Aduan</a>
+            <a class="button" href="FormStatusPengaduan.html">Status Pengaduan</a>
+        </nav>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Desa Sukodono. Semua hak dilindungi.</p>
+    </footer>
 </body>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    header {
+        background: #007BFF;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 5px;
+    }
+
+    nav {
+        margin: 20px 0;
+    }
+
+    nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: #007BFF;
+        font-weight: bold;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 0;
+        background: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .button:hover {
+        background: #0056b3;
+    }
+
+    footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9em;
+        color: #666;
+    }
+</style>
 
 </html>
