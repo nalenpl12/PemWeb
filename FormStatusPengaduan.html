@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Pengaduan</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h2>Status Pengaduan Infrastruktur</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID Pengaduan</th>
+                <th>Nama Pelapor</th>
+                <th>Lokasi Kejadian</th>
+                <th>Kategori</th>
+                <th>Deskripsi</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="statusTable">
+            <tr><td colspan="6">Belum ada pengaduan.</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        function loadStatusPengaduan() {
+            let pengaduanList = JSON.parse(localStorage.getItem("pengaduanList")) || [];
+            let tableBody = document.getElementById("statusTable");
+
+            tableBody.innerHTML = "";
+            if (pengaduanList.length === 0) {
+                tableBody.innerHTML = "<tr><td colspan='6'>Belum ada pengaduan.</td></tr>";
+                return;
+            }
+
+            pengaduanList.forEach(p => {
+                let row = `<tr>
+                    <td>${p.id}</td>
+                    <td>${p.nama}</td>
+                    <td>${p.lokasi}</td>
+                    <td>${p.kategori}</td>
+                    <td>${p.deskripsi}</td>
+                    <td>${p.status}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadStatusPengaduan);
+    </script>
+</body>
+</html>
