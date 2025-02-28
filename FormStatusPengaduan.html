@@ -4,26 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Pengaduan</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background-color: #2563eb;
+        }
+    </style>
 </head>
 <body>
-    <h2>Status Pengaduan Infrastruktur</h2>
+    <div class="container">
+        <h2>Status Pengaduan Infrastruktur</h2>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID Pengaduan</th>
-                <th>Nama Pelapor</th>
-                <th>Lokasi Kejadian</th>
-                <th>Kategori</th>
-                <th>Deskripsi</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="statusTable">
-            <tr><td colspan="6">Belum ada pengaduan.</td></tr>
-        </tbody>
-    </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Pengaduan</th>
+                    <th>Nama Pelapor</th>
+                    <th>Lokasi Kejadian</th>
+                    <th>Kategori</th>
+                    <th>Deskripsi</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="statusTable">
+                <tr><td colspan="6">Belum ada pengaduan.</td></tr>
+            </tbody>
+        </table>
+
+        <a href="Dashboard.html">Kembali ke Beranda</a>
+    </div>
 
     <script>
         function loadStatusPengaduan() {
@@ -50,7 +115,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", loadStatusPengaduan);
-    </script> <br>
-    <a href="Dashboard.html">Kembali ke Beranda</a>
+    </script>
 </body>
 </html>
