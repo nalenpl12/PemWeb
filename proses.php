@@ -1,4 +1,7 @@
 <?php
+if(isset($_POST['submit'])){
 $nama = $_GET['nama'];
-echo($nama);
+$alamat = $_GET[alamat];
+echo "Data Berhasil ditambahkan" .$nama;
 ?>
+
