@@ -120,21 +120,15 @@
         </form>
 
         <?php
-        // Koneksi ke database
         $host = "localhost";
         $user = "root";
-        $pass = ""; // Default kosong untuk XAMPP
+        $pass = ""
         $db   = "UsulanPembangunan_Data";
 
-        // Membuat koneksi
         $koneksi = mysqli_connect($host, $user, $pass, $db);
-
-        // Periksa koneksi
         if (!$koneksi) {
             die("Koneksi gagal: " . mysqli_connect_error());
         }
-
-        // Proses simpan data
         if (isset($_POST['submit'])) {
             $namaPelapor = $_POST['namaPelapor'];
             $noHp = $_POST['noHp'];
@@ -152,8 +146,6 @@
                 echo "Error: " . mysqli_error($koneksi);
             }
         }
-
-        // Tutup koneksi
         mysqli_close($koneksi);
         ?>
     </div>
