@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usulan Pembangunan</title>
+    <title>Form Usulan Pembangunan</title>
     <style>
         body {
             display: flex;
@@ -71,14 +71,15 @@
         }
 
         button:hover {
-            background-color: #2563eb;
+            background-color: #eb5d25;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Usulan Pembangunan</h2>
-        <form>
+        <h2>Form Usulan Pembangunan</h2>
+        <!-- Formulir -->
+        <form action="" method="POST">
             <div class="form-group">
                 <label for="namaPelapor">Nama Pelapor</label>
                 <input type="text" id="namaPelapor" name="namaPelapor" required placeholder="Masukkan nama lengkap">
@@ -86,7 +87,7 @@
 
             <div class="form-group">
                 <label for="noHp">Nomor HP</label>
-                <input type="tel" id="noHp" name="noHp" required placeholder="Masukkan nomor HP aktif">
+                <input type="text" id="noHp" name="noHp" required placeholder="Masukkan nomor HP aktif">
             </div>
 
             <div class="form-group">
@@ -115,8 +116,46 @@
                 <input type="date" id="estimasi" name="estimasi" required>
             </div>
 
-            <button type="submit">Kirim Usulan</button>
+            <button type="submit" name="submit">Kirim Usulan</button>
         </form>
+
+        <?php
+        // Koneksi ke database
+        $host = "localhost";
+        $user = "root";
+        $pass = ""; // Default kosong untuk XAMPP
+        $db   = "UsulanPembangunan_Data";
+
+        // Membuat koneksi
+        $koneksi = mysqli_connect($host, $user, $pass, $db);
+
+        // Periksa koneksi
+        if (!$koneksi) {
+            die("Koneksi gagal: " . mysqli_connect_error());
+        }
+
+        // Proses simpan data
+        if (isset($_POST['submit'])) {
+            $namaPelapor = $_POST['namaPelapor'];
+            $noHp = $_POST['noHp'];
+            $lokasi = $_POST['lokasi'];
+            $jenis = $_POST['jenis'];
+            $deskripsi = $_POST['deskripsi'];
+            $estimasi = $_POST['estimasi'];
+
+            $query = "INSERT INTO usulan (namaPelapor, noHp, lokasi, jenis, deskripsi, estimasi) 
+                      VALUES ('$namaPelapor', '$noHp', '$lokasi', '$jenis', '$deskripsi', '$estimasi')";
+
+            if (mysqli_query($koneksi, $query)) {
+                echo "<script>alert('Usulan berhasil dikirim!'); window.location.href='formusulanpembangunan.php';</script>";
+            } else {
+                echo "Error: " . mysqli_error($koneksi);
+            }
+        }
+
+        // Tutup koneksi
+        mysqli_close($koneksi);
+        ?>
     </div>
 </body>
 </html>
