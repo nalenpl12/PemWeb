@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="number" id="phone" name="phone" required>
             </div>
             <div class="form-group">
-                <label for="alamat">Amat Rumah:</label>
+                <label for="alamat">Alamat Rumah:</label>
                 <input type="text" id="alamat" name="alamat" required>
             </div>
             <div class="form-group">
