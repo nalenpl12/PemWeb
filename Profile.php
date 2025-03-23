@@ -1,3 +1,20 @@
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "pemweb";
+
+$koneksi = mysqli_connect($host, $user, $pass, $db);
+if (!$koneksi) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
+// Ambil data profile dari database
+$sql = "SELECT * FROM profile ORDER BY id DESC LIMIT 1"; // ambil data terbaru
+$result = mysqli_query($koneksi, $sql);
+$data = mysqli_fetch_assoc($result);
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -5,24 +22,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Pengguna</title>
-
 </head>
 
 <body>
     <div class="container">
         <div class="profile-header">
-            <div class="profile-picture">2N</div>
+            <div class="profile-picture">
+                <?php echo strtoupper(substr($data['nama'], 0, 1)); ?>
+            </div>
             <div class="profile-info">
-                <h2>23082010196 Nalendra Pradipta Loka</h2>
-                <a href="EditProfil.html">Edit Profil</a>
+                <h2><?php echo $data['nama']; ?></h2>
+                <a href="EditProfil.php">Edit Profil</a>
             </div>
         </div>
 
         <div class="box">
             <h3>Informasi pengguna</h3>
-            <p><strong>Alamat email:</strong> 23082010196@student.upnjatim.ac.id</p>
-            <p><strong>Nomor telepon:</strong> 081234567890</p>
-            <p><strong>Alamat rumah:</strong> Jl. Papua Graha Asri Sukodono</p>
+            <p><strong>Alamat email:</strong> <?php echo $data['email']; ?></p>
+            <p><strong>Nomor telepon:</strong> <?php echo $data['nomor']; ?></p>
+            <p><strong>Alamat rumah:</strong> <?php echo $data['alamat']; ?></p>
         </div>
 
         <div class="box">
@@ -36,6 +54,14 @@
             <p><a href="FormLogin.html"> Keluar dari akun</a></p>
         </div>
     </div>
+
+    <script>
+        // Tampilkan alert jika berhasil update
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === '1') {
+            alert('Perubahan berhasil disimpan!');
+        }
+    </script>
 </body>
 
 <style>

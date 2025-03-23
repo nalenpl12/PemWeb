@@ -1,4 +1,33 @@
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db = "pemweb";
 
+$koneksi = mysqli_connect($host, $user, $pass, $db);
+if (!$koneksi) {
+    die("Koneksi gagal");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $alamat = $_POST["alamat"];
+
+    $sql = "INSERT INTO profile (nama, email, nomor, alamat) VALUES ('$name', '$email', '$phone', '$alamat')";
+    $query = mysqli_query($koneksi, $sql);
+
+    if ($query) {
+        echo "<script>
+            alert('Perubahan berhasil disimpan!');
+            window.location.href = 'profile.php';
+        </script>";
+    } else {
+        echo "Gagal menambahkan data: " . mysqli_error($koneksi);
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -66,28 +95,28 @@
 <body>
     <div class="container">
         <h2>Edit Profil</h2>
-        <form action="profile.html" method="POST" onsubmit="return validateForm()">
+        <form action="EditProfil.php" method="POST">
             <div class="form-group">
                 <label for="name">Nama:</label>
-                <input type="text" id="name" name="name" value="Nalendra Pradipta Loka" required>
+                <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
                 <label for="email">Alamat Email:</label>
-                <input type="email" id="email" name="email" value="23082010196@student.upnjatim.ac.id" required>
+                <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="phone">Nomor Telepon:</label>
-                <input type="number" id="phone" name="phone" value="081234567890" required>
+                <input type="number" id="phone" name="phone" required>
             </div>
             <div class="form-group">
-                <label for="address">Alamat Rumah:</label>
-                <input type="text" id="address" name="address" value="Jl. Papua Graha Asri Sukodono" required>
+                <label for="alamat">Amat Rumah:</label>
+                <input type="text" id="alamat" name="alamat" required>
             </div>
             <div class="form-group">
                 <button type="submit">Simpan Perubahan</button>
             </div>
         </form>
-        <a href="profile.html">Batal</a>
+        <a href="profile.php">Batal</a>
     </div>
 </body>
 
