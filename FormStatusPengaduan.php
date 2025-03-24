@@ -76,7 +76,7 @@
 
         a:hover {
             background-color: #2563eb;
-        }
+        }zend_logo_guid
     </style>
 </head>
 <body>
@@ -104,7 +104,6 @@
             }
         }
         ?>
-
         <table>
             <thead>
                 <tr>
