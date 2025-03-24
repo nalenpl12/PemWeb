@@ -78,7 +78,6 @@
 <body>
     <div class="container">
         <h2>Form Usulan Pembangunan</h2>
-        <!-- Formulir -->
         <form action="" method="POST">
             <div class="form-group">
                 <label for="namaPelapor">Nama Pelapor</label>
@@ -122,9 +121,8 @@
         <?php
         $host = "localhost";
         $user = "root";
-        $pass = ""
+        $pass = "";
         $db   = "UsulanPembangunan_Data";
-
         $koneksi = mysqli_connect($host, $user, $pass, $db);
         if (!$koneksi) {
             die("Koneksi gagal: " . mysqli_connect_error());

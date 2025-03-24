@@ -84,20 +84,15 @@
         <h2>Status Pengaduan Infrastruktur</h2>
 
         <?php
-        // Koneksi ke database
         $host = "localhost";
         $user = "root";
-        $pass = ""; // Kosongkan jika menggunakan XAMPP default
+        $pass = ""; 
         $db   = "UsulanPembangunan_Data";
 
         $koneksi = mysqli_connect($host, $user, $pass, $db);
-
-        // Periksa koneksi
         if (!$koneksi) {
             die("Koneksi gagal: " . mysqli_connect_error());
         }
-
-        // Hapus data jika tombol "Hapus" ditekan
         if (isset($_GET['hapus'])) {
             $idHapus = $_GET['hapus'];
             $deleteQuery = "DELETE FROM usulan WHERE id = $idHapus";
@@ -124,7 +119,6 @@
             </thead>
             <tbody>
                 <?php
-                // Ambil data dari tabel usulan
                 $query = "SELECT * FROM usulan";
                 $result = mysqli_query($koneksi, $query);
 
@@ -144,7 +138,7 @@
                     echo "<tr><td colspan='7'>Belum ada pengaduan.</td></tr>";
                 }
 
-                mysqli_close($koneksi); // Tutup koneksi
+                mysqli_close($koneksi); 
                 ?>
             </tbody>
         </table>
