@@ -54,14 +54,6 @@ $data = mysqli_fetch_assoc($result);
             <p><a href="FormLogin.html"> Keluar dari akun</a></p>
         </div>
     </div>
-
-    <script>
-        // Tampilkan alert jika berhasil update
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success') === '1') {
-            alert('Perubahan berhasil disimpan!');
-        }
-    </script>
 </body>
 
 <style>
