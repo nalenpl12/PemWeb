@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Pengaduan</title>
+    <title>Status Usulan Pembangunan</title>
     <style>
         body {
             display: flex;
