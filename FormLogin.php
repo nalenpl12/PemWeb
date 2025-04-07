@@ -110,6 +110,7 @@
         .error-message {
             color: red;
             margin-bottom: 15px;
+            font-weight: bold;
         }
 
         #registerForm {
