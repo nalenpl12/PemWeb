@@ -21,8 +21,11 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("sss", $nama, $email, $hashed);
 
 if ($stmt->execute()) {
-    echo "Registrasi berhasil. <a href='FormLogin.php'>Login sekarang</a>";
+    // Redirect ke form login dengan pesan sukses
+    header("Location: FormLogin.php?success=registered");
+    exit;
 } else {
     echo "Gagal daftar: " . $stmt->error;
 }
+
 ?>
