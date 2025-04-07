@@ -20,7 +20,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ss", $nama, $hashed);
 
 if ($stmt->execute()) {
-    echo "Registrasi berhasil. <a href='FormLogin.html'>Login sekarang</a>";
+    echo "Registrasi berhasil. <a href='FormLogin.php'>Login sekarang</a>";
 } else {
     echo "Gagal daftar: " . $conn->error;
 }
