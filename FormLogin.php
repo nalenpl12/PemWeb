@@ -136,7 +136,7 @@
         <div class="right-panel">
             <?php
             if (isset($_GET['success']) && $_GET['success'] == 'registered') {
-                echo "<div class='success-message'>Registrasi berhasil! Silakan login.</div>";
+                echo "<div class='success-message'>Registrasi berhasil! Silakan Masuk.</div>";
             }
             ?>
             <!-- LOGIN FORM -->
@@ -151,7 +151,6 @@
                     } elseif ($_GET['error'] == 'wrongpassword') {
                         $message = 'Password salah.';
                     }
-
                     if ($message != '') {
                         echo "<div class='error-message'>$message</div>";
                     }
