@@ -107,20 +107,61 @@
             text-decoration: none;
         }
 
-        .error-message {
-            color: red;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
         #registerForm {
             display: none;
         }
 
+        .success-message,
+        .error-message {
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
         .success-message {
             color: green;
+            background-color: #e6f5e6;
+        }
+
+        .error-message {
+            color: red;
+            background-color: #fce4e4;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+
+        .alert {
+            background-color: #ffe0e0;
+            color: #b30000;
+            padding: 10px 15px;
+            border: 1px solid #ffcccc;
+            border-radius: 5px;
             margin-bottom: 15px;
+            animation: fadeOut 3s forwards;
+            font-size: 14px;
             font-weight: bold;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
         }
     </style>
 </head>
@@ -142,9 +183,9 @@
                 if (isset($_GET['error'])) {
                     $message = '';
                     if ($_GET['error'] == 'usernotfound') {
-                        $message = 'User tidak ditemukan.';
+                        $message = 'Pengguna tidak ditemukan.';
                     } elseif ($_GET['error'] == 'wrongpassword') {
-                        $message = 'Password salah.';
+                        $message = 'Password atau Nama Pengguna salah.';
                     }
 
                     if ($message != '') {
@@ -155,6 +196,20 @@
                 <?php
                 if (isset($_GET['success']) && $_GET['success'] == 'registered') {
                     echo "<div class='success-message'>Registrasi berhasil! Silakan Masuk.</div>";
+                }
+                ?>
+                <?php
+                if (isset($_GET['registerError'])) {
+                    $message = '';
+                    if ($_GET['registerError'] == 'userexists') {
+                        $message = 'Pengguna atau email sudah tersedia.';
+                    } elseif ($_GET['registerError'] == 'passwordmismatch') {
+                        $message = 'Password tidak sesuai.';
+                    }
+
+                    if ($message !== '') {
+                        echo "<div class='alert fade-out'>$message</div>";
+                    }
                 }
                 ?>
 
@@ -209,6 +264,28 @@
             document.getElementById("registerForm").style.display = "none";
             document.getElementById("loginForm").style.display = "block";
         }
+        setTimeout(() => {
+            const success = document.querySelector('.success-message');
+            const error = document.querySelector('.error-message');
+
+            if (success) {
+                success.classList.add('fade-out');
+                setTimeout(() => success.remove(), 1000); // Hapus setelah transisi selesai
+            }
+
+            if (error) {
+                error.classList.add('fade-out');
+                setTimeout(() => error.remove(), 1000);
+            }
+        }, 2000);
+        setTimeout(() => {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s ease-out';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 2000);
     </script>
 </body>
 
