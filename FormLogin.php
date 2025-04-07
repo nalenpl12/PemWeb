@@ -79,18 +79,41 @@
         #registerForm {
             display: none;
         }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
 <body>
-    <form action="proses.php" method="POST"></form>
     <div class="container">
+        <!-- LOGIN FORM -->
         <div id="loginForm">
             <h2>Login</h2>
-            <form>
+
+            <!-- Pesan Error -->
+            <?php
+            if (isset($_GET['error'])) {
+                $message = '';
+                if ($_GET['error'] == 'usernotfound') {
+                    $message = 'User tidak ditemukan.';
+                } elseif ($_GET['error'] == 'wrongpassword') {
+                    $message = 'Password salah.';
+                }
+
+                if ($message != '') {
+                    echo "<div class='error-message'>$message</div>";
+                }
+            }
+            ?>
+
+            <form action="login_process.php" method="POST">
                 <div class="form-group">
-                    <label for="loginNama">Nama Lengkap</label>
-                    <input type="text" id="loginNama" name="nama" required>
+                    <label for="identifier">Nama atau Email</label>
+                    <input type="text" id="identifier" name="identifier" required>
                 </div>
 
                 <div class="form-group">
@@ -99,17 +122,22 @@
                 </div>
 
                 <button type="submit">Login</button>
-
             </form>
             <p>Belum punya akun? <a href="#" onclick="showRegister()">Daftar</a></p>
         </div>
 
+        <!-- REGISTER FORM -->
         <div id="registerForm">
             <h2>Register</h2>
-            <form>
+            <form action="register_process.php" method="POST">
                 <div class="form-group">
                     <label for="registerNama">Nama Lengkap</label>
                     <input type="text" id="registerNama" name="nama" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" required>
                 </div>
 
                 <div class="form-group">
@@ -127,7 +155,6 @@
             <p>Sudah punya akun? <a href="#" onclick="showLogin()">Login</a></p>
         </div>
     </div>
-    </from>
 
     <script>
         function showRegister() {
@@ -139,7 +166,6 @@
             document.getElementById("registerForm").style.display = "none";
             document.getElementById("loginForm").style.display = "block";
         }
-
     </script>
 </body>
 
