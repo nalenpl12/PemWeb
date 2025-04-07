@@ -23,7 +23,7 @@ if (password_verify($password, $user['password'])) {
     header("Location: dashboard.php");
     exit;
 } else {
-    header("Location: FormLogin.php?error=usernotfound");
+    header("Location: FormLogin.php?error=wrongpassword");
     exit;
 }
 ?>

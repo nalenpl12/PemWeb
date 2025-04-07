@@ -130,20 +130,14 @@
         <!-- LEFT -->
         <div class="left-panel">
             <h2>Selamat Datang di<br>sistem Pengaduan Infrastruktur<br>Desa Pekarungan</h2>
-            <img src="img/Architect.png" alt="Ilustrasi"> <!-- Ganti src sesuai nama file kamu -->
+            <img src="img/Architect.png" alt="Ilustrasi">
         </div>
 
         <!-- RIGHT -->
         <div class="right-panel">
-            <?php
-            if (isset($_GET['success']) && $_GET['success'] == 'registered') {
-                echo "<div class='success-message'>Registrasi berhasil! Silakan Masuk.</div>";
-            }
-            ?>
             <!-- LOGIN FORM -->
             <div id="loginForm">
                 <h2>MASUK</h2>
-
                 <?php
                 if (isset($_GET['error'])) {
                     $message = '';
@@ -152,9 +146,15 @@
                     } elseif ($_GET['error'] == 'wrongpassword') {
                         $message = 'Password salah.';
                     }
+
                     if ($message != '') {
                         echo "<div class='error-message'>$message</div>";
                     }
+                }
+                ?>
+                <?php
+                if (isset($_GET['success']) && $_GET['success'] == 'registered') {
+                    echo "<div class='success-message'>Registrasi berhasil! Silakan Masuk.</div>";
                 }
                 ?>
 
