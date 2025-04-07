@@ -2,29 +2,28 @@
 session_start();
 require 'db.php';
 
-$nama = $_POST['nama'];
+$identifier = $_POST['identifier'];
 $password = $_POST['password'];
 
-// Ambil user dari database
-$sql = "SELECT * FROM users WHERE nama = ?";
+$sql = "SELECT * FROM users WHERE nama = ? OR email = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $nama);
+$stmt->bind_param("ss", $identifier, $identifier);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows === 1) {
-    $user = $result->fetch_assoc();
+if ($result->num_rows === 0) {
+    header("Location: FormLogin.php?error=usernotfound");
+    exit;
+}
 
-    if (password_verify($password, $user['password'])) {
-        // Login berhasil
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['nama'] = $user['nama'];
-        header("Location: dashboard.php");
-        exit;
-    } else {
-        echo "Password salah!";
-    }
+$user = $result->fetch_assoc();
+if (password_verify($password, $user['password'])) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['nama'] = $user['nama'];
+    header("Location: dashboard.php");
+    exit;
 } else {
-    echo "Akun tidak ditemukan!";
+    header("Location: FormLogin.php?error=usernotfound");
+    exit;
 }
 ?>
