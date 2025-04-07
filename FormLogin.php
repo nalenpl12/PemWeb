@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Login & Register</title>
@@ -114,8 +115,15 @@
         #registerForm {
             display: none;
         }
+
+        .success-message {
+            color: green;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- LEFT -->
@@ -126,6 +134,11 @@
 
         <!-- RIGHT -->
         <div class="right-panel">
+            <?php
+            if (isset($_GET['success']) && $_GET['success'] == 'registered') {
+                echo "<div class='success-message'>Registrasi berhasil! Silakan login.</div>";
+            }
+            ?>
             <!-- LOGIN FORM -->
             <div id="loginForm">
                 <h2>MASUK</h2>
@@ -198,4 +211,5 @@
         }
     </script>
 </body>
+
 </html>
