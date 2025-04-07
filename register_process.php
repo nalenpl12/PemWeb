@@ -2,6 +2,7 @@
 require 'db.php';
 
 $nama = $_POST['nama'];
+$email = $_POST['email'];
 $password = $_POST['password'];
 $confirm = $_POST['confirm_password'];
 
@@ -15,12 +16,12 @@ if ($password !== $confirm) {
 $hashed = password_hash($password, PASSWORD_DEFAULT);
 
 // Simpan ke database
-$sql = "INSERT INTO users (nama, password) VALUES (?, ?)";
+$sql = "INSERT INTO users (nama, email, password) VALUES (?, ?, ?)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $nama, $hashed);
+$stmt->bind_param("sss", $nama, $email, $hashed);
 
 if ($stmt->execute()) {
-    echo "Registrasi berhasil. <a href='FormLogin.html'>Login sekarang</a>";
+    echo "Registrasi berhasil. <a href='FormLogin.php'>Login sekarang</a>";
 } else {
     echo "Gagal daftar: " . $stmt->error;
 }
