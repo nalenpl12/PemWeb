@@ -170,7 +170,7 @@
     <div class="container">
         <!-- LEFT -->
         <div class="left-panel">
-            <h2>Selamat Datang di<br>sistem Pengaduan Infrastruktur<br>Desa Pekarungan</h2>
+            <h2>Selamat Datang di<br>Sistem Pengaduan Infrastruktur<br>Desa Pekarungan</h2>
             <img src="img/Architect.png" alt="Ilustrasi">
         </div>
 
@@ -229,7 +229,7 @@
 
             <!-- REGISTER FORM -->
             <div id="registerForm">
-                <h2>Buat Akun</h2>
+                <h2>BUAT AKUN</h2>
                 <form action="register_process.php" method="POST">
                     <div class="form-group">
                         <input type="text" name="nama" placeholder="Nama Lengkap" required>
