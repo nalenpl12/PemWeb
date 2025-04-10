@@ -51,7 +51,7 @@ $data = mysqli_fetch_assoc($result);
 
         <div class="box">
             <h3>Akun</h3>
-            <p><a href="FormLogin.html"> Keluar dari akun</a></p>
+            <p><a href="FormLogin.php"> Keluar dari akun</a></p>
         </div>
     </div>
 </body>
