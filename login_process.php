@@ -20,7 +20,7 @@ $user = $result->fetch_assoc();
 if (password_verify($password, $user['password'])) {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['nama'] = $user['nama'];
-    header("Location: dashboard.php");
+    header("Location: Beranda.html");
     exit;
 } else {
     header("Location: FormLogin.php?error=wrongpassword");
