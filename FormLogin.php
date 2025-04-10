@@ -13,7 +13,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #ffefe2;
+            background: linear-gradient(to bottom, #FFECDB, #77CDFF);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,7 +25,7 @@
             width: 900px;
             height: 540px;
             background-color: #fff;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
             border-radius: 16px;
             overflow: hidden;
         }
@@ -93,7 +93,7 @@
         }
 
         button:hover {
-            background-color: #084b8a;
+            background-color: #00295f;
         }
 
         p {
