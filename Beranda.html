@@ -14,6 +14,7 @@
     }
 
     body {
+      position: relative;
       background: linear-gradient(to bottom, #0366d6, #d0e5f9);
       min-height: 130vh;
       display: flex;
@@ -72,7 +73,7 @@
       font-size: 30px;
       font-weight: 700;
       color: #004ba0;
-      margin: 0 30px 0;
+      margin: 30px 30px 0;
     }
 
     .subtitle {
@@ -94,6 +95,36 @@
     .bottom-image img {
       max-width: 100%;
     }
+
+    .button-box {
+      position: absolute;
+      top: 350px;
+      left: 100px;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .button-box button {
+      background-color: #0d6efd;
+      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+      font-size: 13px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 50px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-box button:hover {
+      background-color: #00295f;
+    }
+
 
     @media (max-width: 768px) {
       .header {
@@ -133,7 +164,10 @@
         yang lebih baik, bersama masyarakat.
       </div>
     </div>
-
+    <div class="button-box">
+      <button onclick="location.href='form_pengaduan.php'">Laporkan Sekarang</button>
+      <button onclick="location.href='FormUsulanPembangunan.php'">Saran Infrastruktur</button>
+    </div>
     <div class="bottom-section">
       <div class="bottom-image">
         <img src="img/Illustrasi.png" alt="Ilustrasi Pembangunan Desa">
