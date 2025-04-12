@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
   <style>
     :root {
-      --primary: #166534;
-      --secondary: #22c55e;
-      --light: #f0fdf4;
-      --dark: #064e3b;
+      --primary: #004e92;
+      --secondary: #3b82f6;
+      --light: #e0f7ff;
+      --dark: #002f6c;
       --bg-color: #e9f5ee;
       --card-bg: white;
       --shadow: rgba(0, 0, 0, 0.1);
@@ -18,7 +18,7 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-color);
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
       margin: 0;
       padding: 20px;
       display: flex;
@@ -28,7 +28,7 @@
     }
 
     .container {
-      background-color: var(--card-bg);
+      background-color: var(--light);
       padding: 40px;
       width: 100%;
       max-width: 1200px;
@@ -91,7 +91,7 @@
     .back-btn {
       display: inline-block;
       margin-top: 30px;
-      background-color: #1e3a8a;
+      background-color: var(--secondary);
       color: white;
       padding: 12px 24px;
       border-radius: 8px;
@@ -101,7 +101,7 @@
     }
 
     .back-btn:hover {
-      background-color: #172554;
+      background-color: var(--dark);
     }
 
     form {
@@ -116,6 +116,7 @@
       border-radius: 6px;
       border: 1px solid #ccc;
       font-family: 'Poppins', sans-serif;
+      color: var(--primary);
     }
 
     form button {

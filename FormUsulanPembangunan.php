@@ -11,7 +11,7 @@
       align-items: center;
       padding: 30px;
       margin: 0;
-      background-color: #f8f9fa;
+      background: linear-gradient(to bottom, #004e92,rgb(112, 224, 255));
       font-family: Arial, sans-serif;
     }
 
@@ -19,7 +19,7 @@
       max-width: 600px;
       width: 100%;
       padding: 25px;
-      background: #fff;
+      background: #e0f7ff;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -27,7 +27,7 @@
     h2 {
       margin-bottom: 15px;
       font-size: 20px;
-      color: #333;
+      color: #004e92; 
       text-align: center;
     }
 
@@ -41,7 +41,7 @@
       font-size: 14px;
       display: block;
       margin-bottom: 5px;
-      color: #555;
+      color: #004e92; 
     }
 
     .form-group input,
