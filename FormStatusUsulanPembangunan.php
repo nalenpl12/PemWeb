@@ -7,18 +7,17 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
   <style>
     :root {
-      --primary: #004e92;
-      --secondary: #3b82f6;
-      --light: #e0f7ff;
-      --dark: #002f6c;
-      --bg-color: #e9f5ee;
+      --primary: #2563eb;
+      --secondary: #10b981;
+      --light: #f0f7ff;
+      --dark: #1e3a8a;
       --card-bg: white;
       --shadow: rgba(0, 0, 0, 0.1);
     }
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      background: linear-gradient(to right, #FFECDB, #77CDFF);
       margin: 0;
       padding: 20px;
       display: flex;
@@ -28,7 +27,7 @@
     }
 
     .container {
-      background-color: var(--light);
+      background-color: var(--card-bg);
       padding: 40px;
       width: 100%;
       max-width: 1200px;
@@ -38,7 +37,7 @@
 
     h2 {
       text-align: center;
-      color: var(--primary);
+      color: var(--black);
       margin-bottom: 30px;
     }
 
@@ -51,7 +50,8 @@
     th, td {
       border: 1px solid #ccc;
       padding: 14px;
-      text-align: left;
+      text-align: center;
+      font-size: 14px;
     }
 
     th {
@@ -67,16 +67,20 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
-    .delete-btn {
-      background-color: #dc2626;
-      color: white;
+    .delete-btn, .edit-btn {
       padding: 8px 14px;
       border-radius: 6px;
       text-decoration: none;
       font-weight: 600;
       transition: 0.3s;
+    }
+
+    .delete-btn {
+      background-color: #dc2626;
+      color: white;
     }
 
     .delete-btn:hover {
@@ -86,6 +90,10 @@
     .edit-btn {
       background-color: #facc15;
       color: black;
+    }
+
+    .edit-btn:hover {
+      background-color: #eab308;
     }
 
     .back-btn {
@@ -98,10 +106,11 @@
       text-decoration: none;
       font-weight: 600;
       transition: 0.3s;
+      text-align: center;
     }
 
     .back-btn:hover {
-      background-color: var(--dark);
+      background-color: #059669;
     }
 
     form {
@@ -130,6 +139,16 @@
       background-color: var(--dark);
     }
 
+    .badge {
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      font-weight: 500;
+      color: white;
+      background-color: #64748b;
+      display: inline-block;
+    }
+
     @media (max-width: 600px) {
       .action-buttons {
         flex-direction: column;
@@ -152,7 +171,6 @@
       die("Koneksi gagal: " . mysqli_connect_error());
   }
 
-  // Hapus
   if (isset($_GET['hapus'])) {
       $idHapus = $_GET['hapus'];
       $deleteQuery = "DELETE FROM usulan WHERE id = $idHapus";
@@ -165,7 +183,6 @@
       }
   }
 
-  // Ambil data untuk edit
   $editData = null;
   if (isset($_GET['edit'])) {
       $idEdit = $_GET['edit'];
@@ -173,7 +190,6 @@
       $editData = mysqli_fetch_assoc($result);
   }
 
-  // Update
   if (isset($_POST['update'])) {
       $id = $_POST['id'];
       $nama = $_POST['namaPelapor'];
