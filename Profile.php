@@ -1,120 +1,255 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db = "pemweb";
+session_start();
+include 'db.php';
 
-$koneksi = mysqli_connect($host, $user, $pass, $db);
-if (!$koneksi) {
-    die("Koneksi gagal: " . mysqli_connect_error());
+$user_id = $_SESSION['user_id'];
+
+// tambahkan telepon dan alamat
+$query = "SELECT nama, email, telepon, alamat FROM users WHERE id = '$user_id'";
+$result = mysqli_query($conn, $query);
+
+if (!$result) {
+    die("Query error: " . mysqli_error($conn));
 }
 
-// Ambil data profile dari database
-$sql = "SELECT * FROM profile ORDER BY id DESC LIMIT 1"; // ambil data terbaru
-$result = mysqli_query($koneksi, $sql);
-$data = mysqli_fetch_assoc($result);
+$user = mysqli_fetch_assoc($result);
+
+$nama = $user['nama'];
+$email = $user['email'];
+$telepon = $user['telepon'];
+$alamat = $user['alamat'];
+
+// inisial untuk avatar
+$inisial = strtoupper(substr($nama, 0, 1));
+
+// tampilkan xxxxx jika kosong
+$tampilTelepon = !empty($telepon) ? htmlspecialchars($telepon) : 'xxxxx';
+$tampilAlamat = !empty($alamat) ? htmlspecialchars($alamat) : 'xxxxx';
 ?>
 
+
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Pengguna</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beranda - Pengaduan Infrastruktur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            position: relative;
+            background: linear-gradient(to bottom, #0366d6, #d0e5f9);
+            min-height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, #AFDDFF 10%, #FBFFFF 37%);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 2000px;
+            text-align: left;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+
+        .body {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            text-align: left;
+            margin: 30px 30px 0;
+        }
+
+        .header-left h2 {
+            color: #004ba0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header-left p {
+            color: #202020;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .left {
+            width: 55%;
+            padding: 30px;
+        }
+
+        .header-right {
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 70px;
+            padding: 30px;
+        }
+
+        .informasi p {
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .informasi h3 {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .informasi button,
+        .aduan button {
+            background-color: #0d6efd;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            margin-top: 15px;
+            margin-right: 10px;
+            padding: 8px 30px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .akun button {
+            background-color: rgb(255, 12, 12);
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            margin-top: 15px;
+            margin-right: 10px;
+            padding: 8px 30px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .akun button:hover {
+            background-color: rgb(152, 16, 16);
+        }
+
+        .informasi button:hover,
+        .aduan button:hover {
+            background-color: #00295f;
+        }
+
+        .user {
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #ccc;
+            border-radius: 50%;
+            font-size: 36px;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            text-align: left;
+            margin: 30px 30px 0;
+        }
+
+        .right img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="profile-header">
-            <div class="profile-picture">
-                <?php echo strtoupper(substr($data['nama'], 0, 1)); ?>
+        <div class="top-section">
+            <div class="header">
+                <div class="header-left">
+                    <a href="Beranda.html"><img src="img/Sidoarjo.png" alt="Logo Desa" width="100" height="97"></a>
+                    <div class="text-content">
+                        <h2>WEBSITE RESMI PENGADUAN INFRASTRUKTUR<br>DESA PEKARUNGAN</h2>
+                        <p>Kecamatan Sukodono, Kabupaten Sidoarjo, Provinsi Jawa Timur</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="Beranda.html"><span>Beranda</span></a>
+                    <a href="Profile.php"><img src="img/User.png" alt="User Icon" width="50" height="50"></a>
+                </div>
             </div>
-            <div class="profile-info">
-                <h2><?php echo $data['nama']; ?></h2>
-                <a href="EditProfil.php">Edit Profil</a>
+            <div class="body">
+                <div class="left">
+                    <div class="user">
+                        <div class="avatar"><?php echo $inisial; ?></div>
+                        <h2><?php echo htmlspecialchars($nama); ?></h2>
+                    </div>
+                    <div class="informasi">
+                        <h3>Informasi Pengguna</h3>
+                        <p>Alamat Email: <?php echo htmlspecialchars($email); ?></p>
+                        <p>Nomor Telepon: <?php echo $tampilTelepon; ?></p>
+                        <p>Alamat Rumah: <?php echo $tampilAlamat; ?></p>
+                        <button class="btnbiru" onclick="location.href='EditProfile.php'">Ubah Profil</button>
+                    </div>
+                    <div class="aduan">
+                        <h3>Aduan dan Saran</h3>
+                        <button class="btnbiru" onclick="location.href=''">Daftar Aduan</button>
+                        <button class="btnbiru" onclick="location.href=''">Daftar Saran</button>
+                        <button class="btnbiru" onclick="location.href=''">Status Aduan</button>
+                    </div>
+                    <div class="akun">
+                        <h3>Akun</h3>
+                        <button class="btnmerah" onclick="location.href='Logout.php'">Keluar dari Akun</button>
+                    </div>
+                </div>
+                <div class="right">
+                    <img src="img/Profile01.png" alt="Ilustrasi Profil">
+                </div>
             </div>
-        </div>
 
-        <div class="box">
-            <h3>Informasi pengguna</h3>
-            <p><strong>Alamat email:</strong> <?php echo $data['email']; ?></p>
-            <p><strong>Nomor telepon:</strong> <?php echo $data['nomor']; ?></p>
-            <p><strong>Alamat rumah:</strong> <?php echo $data['alamat']; ?></p>
         </div>
-
-        <div class="box">
-            <h3>Pengaduan & Saran</h3>
-            <p><a href="#">Daftar Aduanmu</a></p>
-            <p><a href="#">Daftar Saranmu</a></p>
-        </div>
-
-        <div class="box">
-            <h3>Akun</h3>
-            <p><a href="FormLogin.php"> Keluar dari akun</a></p>
-        </div>
-    </div>
 </body>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f5f5f5;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .profile-header {
-        display: flex;
-        align-items: center;
-    }
-
-    .profile-picture {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background-color: #ccc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        font-weight: bold;
-        margin-right: 15px;
-    }
-
-    .profile-info {
-        font-size: 18px;
-    }
-
-    .box {
-        background: #fff;
-        padding: 15px;
-        margin-top: 10px;
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .box h3 {
-        margin: 0 0 10px;
-    }
-
-    a {
-        color: blue;
-        text-decoration: none;
-    }
-
-    a:hover {
-        text-decoration: underline;
-    }
-</style>
 
 </html>
