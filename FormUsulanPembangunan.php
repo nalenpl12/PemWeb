@@ -269,7 +269,7 @@
         $query_usulan = "INSERT INTO usulan (namaPelapor, noHp, lokasi, jenis, deskripsi, estimasi) 
                          VALUES ('$namaPelapor', '$noHp', '$lokasi', '$jenis', '$deskripsi', '$estimasi')";
 
-        if (mysqli_query($koneksi, $query_usulan) && mysqli_query($koneksi, $query_lokasi)) {
+        if (mysqli_query($koneksi, query: $query_usulan) && mysqli_query($koneksi, $query_lokasi)) {
             echo "<script>alert('Usulan berhasil dikirim!'); window.location.href='formusulanpembangunan.php';</script>";
         } else {
             echo "Error: " . mysqli_error($koneksi);
