@@ -207,6 +207,10 @@
         <a href="formstatususulanpembangunan.php" class="view-status">Lihat Status</a>
       </div>
     </form>
+    <div class="form-buttons">
+  <a href="beranda.html" class="view-status" style="background-color: #ff9800;">Kembali ke Beranda</a>
+</div>
+
 
     <?php
     $host = "localhost";
