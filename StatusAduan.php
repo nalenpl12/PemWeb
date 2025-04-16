@@ -88,14 +88,6 @@ $result = mysqli_query($koneksi, $sql);
             padding: 12px;
             border: 1px solid #ccc;
         }
-
-        .top-buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
     </style>
 </head>
 
