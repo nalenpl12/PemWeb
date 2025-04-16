@@ -1,5 +1,5 @@
 <?php
-include 'config/koneksi.php';
+include 'koneksi.php';
 
 // Ambil semua data aduan
 $sql = "SELECT * FROM aduan ORDER BY tanggal DESC, jam DESC";
