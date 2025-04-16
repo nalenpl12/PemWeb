@@ -255,6 +255,7 @@
   </table>
 
   <a href="formusulanpembangunan.php" class="back-btn">+ Buat Usulan Baru</a>
+  <a href="beranda.html" class="view-status" style="background-color: #ff9800;">Kembali ke Beranda</a>
 </div>
 </body>
 </html>
