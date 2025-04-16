@@ -1,6 +1,6 @@
 <?php
 //Koneksi ke Database
-include 'config/koneksi.php';
+include 'koneksi.php';
 ?>
 
 <!DOCTYPE html>
