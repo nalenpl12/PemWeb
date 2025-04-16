@@ -142,7 +142,7 @@ $result = mysqli_query($koneksi, $sql);
             <a href="form_pengaduan.php"
                 style="display: inline-block; padding: 10px 20px; background-color: #e2e2e2; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
                 Kembali ke Form
-                <a href="form_pengaduan.php"
+                <a href="Beranda.html"
                     style="display: inline-block; padding: 10px 20px; background-color: #0d6efd; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
                     Kembali ke Beranda
                 </a>
