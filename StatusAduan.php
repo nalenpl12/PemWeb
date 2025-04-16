@@ -14,7 +14,7 @@ $result = mysqli_query($koneksi, $sql);
     <title>Status Aduan Infrastruktur</title>
     <style>
         body {
-            background-color: #f4f4f4;
+            background: linear-gradient(to right, #FFECDB, #77CDFF);
             font-family: Arial, sans-serif;
             padding: 20px;
         }
