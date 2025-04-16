@@ -73,7 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql1 = "UPDATE aduan SET nama = '$nama', nohp = '$nohp', alamat = '$alamat', tanggal = '$tanggal', jam = '$jam', lokasi = '$lokasi', kategori = '$kategori', deskripsi = '$deskripsi' WHERE id_aduan = '$id_aduan'";
                 $q1 = mysqli_query($koneksi, $sql1);
                 if ($q1) {
-                    $sukses = "Data berhasil diupdate!";
+                    echo "<script>alert('Data berhasil diupdate!'); window.location.href='StatusAduan.php';</script>";
+                    exit;
                 } else {
                     $error = "Gagal memperbarui data!";
                 }
@@ -85,7 +86,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql1 = "INSERT INTO aduan (nama, nohp, alamat, tanggal, jam, lokasi, kategori, deskripsi) VALUES ('$nama', '$nohp', '$alamat', '$tanggal', '$jam', '$lokasi', '$kategori', '$deskripsi')";
             $q1 = mysqli_query($koneksi, $sql1);
             if ($q1) {
-                $sukses = "Pengaduan berhasil dikirim!";
+                $SESSION['sukses'] = "Pengaduan berhasil dikirim!";
+                header("Location: StatusAduan.php");
+                exit;
             } else {
                 $error = "Gagal memasukkan data!";
             }
@@ -93,8 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } else {
         $error = "Silakan isi semua data!";
-        header("Location: StatusAduan.php");
-        exit;
     }
 }
 ?>
@@ -252,6 +253,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="kategori">Jenis Infrastruktur:</label>
                 <select name="kategori" id="kategori" required>
+                    <option value="">-- Pilih Kategori --</option>    
                     <option value="Jalan" <?= $kategori == 'Jalan' ? 'selected' : '' ?>>Jalan</option>
                     <option value="Jembatan" <?= $kategori == 'Jembatan' ? 'selected' : '' ?>>Jembatan</option>
                     <option value="Saluran Air" <?= $kategori == 'Saluran Air' ? 'selected' : '' ?>>Saluran Air</option>
@@ -263,7 +265,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="form-group">
                 <label for="deskripsi" class="form-label">Deskripsi Pengaduan</label>
-                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"><?php echo htmlspecialchars($deskripsi ?? ''); ?></textarea>
+                <textarea class="form-control" id="deskripsi" name="deskripsi"
+                    rows="3"><?php echo htmlspecialchars($deskripsi ?? ''); ?></textarea>
             </div>
 
             <div class="form-group">
