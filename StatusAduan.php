@@ -63,7 +63,8 @@ $result = mysqli_query($koneksi, $sql);
             margin-top: 10px;
         }
 
-        th,td {
+        th,
+        td {
             padding: 12px 15px;
             border: 1px solid #ccc;
             text-align: center;
@@ -86,6 +87,14 @@ $result = mysqli_query($koneksi, $sql);
             color: white;
             padding: 12px;
             border: 1px solid #ccc;
+        }
+
+        .top-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -132,8 +141,11 @@ $result = mysqli_query($koneksi, $sql);
 
             <a href="form_pengaduan.php"
                 style="display: inline-block; padding: 10px 20px; background-color: #e2e2e2; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                Kembali
-            </a>
+                Kembali ke Form
+                <a href="form_pengaduan.php"
+                    style="display: inline-block; padding: 10px 20px; background-color: #0d6efd; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                    Kembali ke Beranda
+                </a>
 
         </div>
 

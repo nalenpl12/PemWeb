@@ -185,8 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .button-link {
             display: inline-block;
             padding: 10px 15px;
-            background-color: #888;
-            /* abu-abu */
+            background-color: #0d6efd ;
             color: white;
             border: none;
             border-radius: 4px;
@@ -198,7 +197,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         a.button-link:hover {
-            background-color: #666;
+            background-color: #0d6efd;
         }
 
         button:hover {
@@ -272,6 +271,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <button type="submit">Kirim Pengaduan</button>
                 <a href="DataAduan.php" class="button-link">Lihat Data Aduan</a>
+                <a href="Beranda.html" class="button-link" style="background-color:#ccc;">Kembali ke Beranda</a>
+
             </div>
         </form>
 
