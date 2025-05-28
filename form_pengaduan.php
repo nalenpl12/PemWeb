@@ -1,107 +1,64 @@
 <?php
-//Koneksi ke Database
-include 'koneksi.php';
+session_start();
+include 'db.php';
 
-//Inisialisasi Variabel
-$nama = "";
-$nohp = "";
-$alamat = "";
-$tanggal = "";
-$jam = "";
-$lokasi = "";
-$kategori = "";
-$deskripsi = "";
-$error = "";
-$sukses = "";
-
-//Definisikan $op untuk menghindari warning
-$op = isset($_GET['op']) ? $_GET['op'] : "";
-
-//Hapus Data
-if ($op == 'delete' && isset($_GET['id_aduan'])) {
-    $id_aduan = $_GET['id_aduan'];
-    $sql1 = "DELETE FROM aduan where id_aduan = '$id_aduan'";
-    $q1 = mysqli_query($koneksi, $sql1);
-    if ($q1) {
-        $sukses = "Berhasil hapus data";
-    } else {
-        $error = "Gagal menghapus data";
-    }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: FormLogin.php");
+    exit();
 }
 
-//Ambil data untuk Edit
-if ($op == 'edit' && isset($_GET['id_aduan'])) {
-    $id_aduan = $_GET['id_aduan'];
-    $sql1 = "SELECT * FROM aduan WHERE id_aduan = '$id_aduan'";
-    $q1 = mysqli_query($koneksi, $sql1);
-    if ($row1 = mysqli_fetch_array($q1)) {
-        $nama = $row1['nama'];
-        $nohp = $row1['nohp'];
-        $alamat = $row1['alamat'];
-        $tanggal = $row1['tanggal'];
-        $jam = $row1['jam'];
-        $lokasi = $row1['lokasi'];
-        $kategori = $row1['kategori'];
-        $deskripsi = $row1['deskripsi'];
-    } else {
-        $error = "Data tidak ditemukan";
-    }
-}
-
-//Tambah atau Edit Data
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama = $_POST['nama'];
-    $nohp = $_POST['nohp'];
-    $alamat = $_POST['alamat'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_user = $_SESSION['user_id'];
     $tanggal = $_POST['tanggal'];
-    $jam = $_POST['jam'];
+    $waktu = $_POST['waktu'];
     $lokasi = $_POST['lokasi'];
-    $kategori = $_POST['kategori'];
+    $jenis = $_POST['jenis'];
     $deskripsi = $_POST['deskripsi'];
 
-    if (!preg_match('/^\d+$/', $nohp)) {
-        $error = "Nomor HP hanya boleh berisi angka!";
-    }
+    $gambar_paths = [];
+    $upload_dir = 'uploads/';
 
-    if ($nama && $nohp && $alamat && $tanggal && $jam && $lokasi && $kategori && $deskripsi) {
-        if ($op == 'edit') {
-            // Pastikan id_aduan tersedia
-            if (isset($_GET['id_aduan'])) {
-                $id_aduan = $_GET['id_aduan'];
+    for ($i = 0; $i < 5; $i++) {
+        if (isset($_FILES['gambar']['name'][$i]) && $_FILES['gambar']['name'][$i] !== '') {
+            $file_tmp = $_FILES['gambar']['tmp_name'][$i];
+            $file_name = time() . '_' . basename($_FILES['gambar']['name'][$i]);
+            $target_path = $upload_dir . $file_name;
 
-                //Untuk Update
-                $sql1 = "UPDATE aduan SET nama = '$nama', nohp = '$nohp', alamat = '$alamat', tanggal = '$tanggal', jam = '$jam', lokasi = '$lokasi', kategori = '$kategori', deskripsi = '$deskripsi' WHERE id_aduan = '$id_aduan'";
-                $q1 = mysqli_query($koneksi, $sql1);
-                if ($q1) {
-                    echo "<script>alert('Data berhasil diupdate!'); window.location.href='StatusAduan.php';</script>";
-                    exit;
-                } else {
-                    $error = "Gagal memperbarui data!";
-                }
+            if (move_uploaded_file($file_tmp, $target_path)) {
+                $gambar_paths[] = $file_name;
             } else {
-                $error = "ID Aduan tidak ditemukan!";
+                $gambar_paths[] = null;
             }
         } else {
-            //untuk insert
-            $sql1 = "INSERT INTO aduan (nama, nohp, alamat, tanggal, jam, lokasi, kategori, deskripsi) VALUES ('$nama', '$nohp', '$alamat', '$tanggal', '$jam', '$lokasi', '$kategori', '$deskripsi')";
-            $q1 = mysqli_query($koneksi, $sql1);
-            if ($q1) {
-                $SESSION['sukses'] = "Pengaduan berhasil dikirim!";
-                header("Location: StatusAduan.php");
-                exit;
-            } else {
-                $error = "Gagal memasukkan data!";
-            }
+            $gambar_paths[] = null;
         }
+    }
 
-    } else {
-        $error = "Silakan isi semua data!";
+    $stmt = $conn->prepare("INSERT INTO pengaduan_infrastruktur (id_user, tanggal, waktu, lokasi, jenis, deskripsi, gambar_1, gambar_2, gambar_3, gambar_4, gambar_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param(
+        "issssssssss",
+        $id_user,
+        $tanggal,
+        $waktu,
+        $lokasi,
+        $jenis,
+        $deskripsi,
+        $gambar_paths[0],
+        $gambar_paths[1],
+        $gambar_paths[2],
+        $gambar_paths[3],
+        $gambar_paths[4]
+    );
+
+    if ($stmt->execute()) {
+        header("Location: form_pengaduan.php?success=sent");
+        exit;
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -123,7 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             justify-content: center;
             align-items: center;
             padding: 20px;
-
         }
 
         .container {
@@ -139,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             align-items: center;
         }
 
@@ -172,71 +128,148 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 30px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            margin-top: 5px;
+        .title {
+            font-size: 30px;
+            font-weight: 700;
+            color: rgb(0, 0, 0);
+            margin: 30px 30px 0;
         }
 
-        form {
-            display: grid;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 500px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .form-body {
+            display: flex;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-bottom: 5px;
+            margin-top: 15px;
+            gap: 30px;
+        }
+
+        .box-left {
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .box-right {
+            padding-left: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .box-left,
+        .box-right,
+        .illustration {
+            flex: 1;
         }
 
         label {
-            display: block;
-            margin-top: 15px;
             font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            display: block;
         }
 
         input,
         select,
         textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
-            background-color: #fff;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            box-sizing: border-box;
         }
 
-        button {
-            margin-top: 18px;
-            background-color: dodgerblue;
-            color: white;
-            padding: 10px 15px;
+        .box-right textarea {
+            height: 219px;
+            width: 100%;
+            border: 2px solid #ccc;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-bottom: 30px;
+        }
+
+        .buttons button {
+            padding: 10px 10px;
+            font-weight: bold;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+            width: 150px;
         }
 
-        .button-link {
-            display: inline-block;
-            padding: 10px 15px;
+        .btn-blue {
             background-color: #0d6efd;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            width: 100%;
             text-align: center;
-            text-decoration: none;
-            font-size: 14px;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 8px;
+            color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
-        a.button-link:hover {
-            background-color: #0d6efd;
+        .btn-red {
+            background-color: rgb(255, 12, 12);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        button:hover {
-            background-color: dodgerblue;
+        .btn-blue:hover {
+            background-color: #00295f;
+        }
+
+        .btn-red:hover {
+            background-color: rgb(152, 16, 16);
+        }
+
+        .illustration {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .illustration img {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color:rgb(5, 187, 47);
+            border: 1px solid #c3e6cb;
+            padding: 12px 20px;
+            margin: 20px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            animation: fadeOut 0.5s ease-out 3s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                height: 0;
+                padding: 0;
+                margin: 0;
+            }
         }
     </style>
 </head>
@@ -257,121 +290,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a href="Profile.php"><img src="img/User.png" alt="User Icon" width="50" height="50"></a>
                 </div>
             </div>
+        </div>
+        <?php if (isset($_GET['success']) && $_GET['success'] == 'sent'): ?>
+            <div class="success-message">Pengaduan berhasil dikirim.</div>
+        <?php endif; ?>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="title">
+                Laporkan Infrastruktur Desa Pekarungan
+            </div>
+            <div class="form-body">
+                <div class="box-left">
+                    <label for="tanggal">Tanggal Kejadian</label>
+                    <input type="date" name="tanggal" id="tanggal" required>
 
-            <div class="alert error"><?php echo $error; ?></div>
-            <?php ; ?>
+                    <label for="waktu">Waktu Kejadian</label>
+                    <input type="time" name="waktu" id="waktu" required>
 
-            <?php if ($sukses): ?>
-                <div class="alert success"><?php echo $sukses; ?></div>
-            <?php endif; ?>
+                    <label for="lokasi">Lokasi Kejadian (jalan & RT/RW)</label>
+                    <input type="text" name="lokasi" id="lokasi" required>
 
-            <form method="POST">
-                <div class="form-group">
-                    <label for="nama">Nama Pelapor:</label>
-                    <input type="text" name="nama" id="nama" value="<?= htmlspecialchars($nama) ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nohp">Nomor HP:</label>
-                    <input type="text" name="nohp" id="nohp" value="<?= htmlspecialchars($nohp) ?>" required
-                        pattern="^[0-9]{10,15}$" title="Nomor HP hanya boleh berisi angka (10–15 digit)">
-                </div>
-
-                <div class="form-group">
-                    <label for="alamat">Alamat:</label>
-                    <textarea name="alamat" id="alamat" rows="3" required><?= htmlspecialchars($alamat) ?></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Kejadian:</label>
-                    <input type="date" name="tanggal" id="tanggal" value="<?= htmlspecialchars($tanggal) ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="jam">Jam Kejadian:</label>
-                    <input type="time" name="jam" id="jam" value="<?= htmlspecialchars($jam) ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="lokasi">Lokasi Kejadian:</label>
-                    <input type="text" name="lokasi" id="lokasi" value="<?= htmlspecialchars($lokasi) ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="kategori">Jenis Infrastruktur:</label>
-                    <select name="kategori" id="kategori" required>
-                        <option value="">-- Pilih Kategori --</option>
-                        <option value="Jalan" <?= $kategori == 'Jalan' ? 'selected' : '' ?>>Jalan</option>
-                        <option value="Jembatan" <?= $kategori == 'Jembatan' ? 'selected' : '' ?>>Jembatan</option>
-                        <option value="Saluran Air" <?= $kategori == 'Saluran Air' ? 'selected' : '' ?>>Saluran Air
-                        </option>
-                        <option value="Lampu Jalan" <?= $kategori == 'Lampu Jalan' ? 'selected' : '' ?>>Lampu Jalan
-                        </option>
-                        <option value="Fasilitas Umum" <?= $kategori == 'Fasilitas Umum' ? 'selected' : '' ?>>Fasilitas
-                            Umum
-                        </option>
+                    <label for="jenis">Jenis Infrastruktur</label>
+                    <select name="jenis" id="jenis" required>
+                        <option value="">-- Pilih --</option>
+                        <option value="Jalan">Jalan</option>
+                        <option value="Jembatan">Jembatan</option>
+                        <option value="Saluran Air">Saluran Air</option>
+                        <option value="Lampu Jalan">Lampu Jalan</option>
+                        <option value="Fasilitas Umum">Fasilitas Umum</option>
+                        <option value="Lainnya">Lainnya</option>
                     </select>
                 </div>
+                <div class="box-right">
+                    <label for="deskripsi">Deskripsi Pengaduan (optional)</label>
+                    <textarea name="deskripsi" id="deskripsi"></textarea>
 
-                <div class="form-group">
-                    <label for="deskripsi" class="form-label">Deskripsi Pengaduan</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi"
-                        rows="3"><?php echo htmlspecialchars($deskripsi ?? ''); ?></textarea>
+                    <label for="gambar">Bukti Pendukung (maks. 5 gambar)</label>
+                    <input type="file" name="gambar[]" id="gambar" accept="image/*" multiple>
                 </div>
-
-                <div class="form-group">
-                    <button type="submit">Kirim Pengaduan</button>
-                    <a href="DataAduan.php" class="button-link">Lihat Data Aduan</a>
-                    <a href="Beranda.html" class="button-link" style="background-color:#ccc;">Kembali ke Beranda</a>
-
+                <div class="illustration">
+                    <img src="img/pengaduan.png" alt="Ilustrasi Form">
                 </div>
-            </form>
-
-            <script>
-                //Validasi Nama: hanya huruf dan spasi
-                document.addEventListener("DOMContentLoaded", function () {
-                    const namaInput = document.getElementById("nama");
-                    const namaWarning = document.createElement("div");
-                    namaWarning.classList.add("text-danger", "mt-1");
-                    namaInput.parentNode.appendChild(namaWarning);
-
-                    namaInput.addEventListener("input", function () {
-                        const pattern = /^[a-zA-Z\s]*$/;
-                        const input = this.value;
-
-                        if (!pattern.test(input)) {
-                            namaWarning.textContent = "Nama hanya boleh terdiri dari huruf dan spasi.";
-                            this.setCustomValidity("Invalid");
-                        } else {
-                            namaWarning.textContent = "";
-                            this.setCustomValidity("");
-                        }
-                    });
-                });
-            </script>
-
-            <script>
-                // Validasi nohp
-                document.addEventListener("DOMContentLoaded", function () {
-                    const nohpInput = document.getElementById("nohp");
-                    const warningNohp = document.createElement("div");
-                    warningNohp.style.color = "red";
-                    nohpInput.parentNode.appendChild(warningNohp);
-
-                    nohpInput.addEventListener("input", function () {
-                        const pattern = /^[0-9]*$/;
-                        const input = this.value;
-
-                        if (!pattern.test(input)) {
-                            warningNohp.textContent = "Nomor HP hanya boleh berisi angka.";
-                            this.setCustomValidity("Invalid");
-                        } else {
-                            warningNohp.textContent = "";
-                            this.setCustomValidity("");
-                        }
-                    });
-                });
-            </script>
+            </div>
+            <div class="buttons">
+                <button type="button" class="btn-red" onclick="window.location.href='Beranda.html'">Kembali</button>
+                <button type="submit" class="btn-blue">Kirim</button>
+            </div>
+        </form>
+    </div>
 </body>
 
 </html>
