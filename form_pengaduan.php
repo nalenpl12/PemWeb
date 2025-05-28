@@ -108,33 +108,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pengaduan Infrastruktur</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #FFECDB, #77CDFF);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            display: grid;
-            flex-direction: column;
-            align-items: center;
+            position: relative;
+            background: linear-gradient(to bottom, #0366d6, #d0e5f9);
+            min-height: 130px;
+            display: flex;
             justify-content: center;
-            height: 100vh;
+            align-items: center;
             padding: 20px;
 
         }
 
         .container {
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 700px;
+            background: linear-gradient(to bottom, #AFDDFF 10%, #FBFFFF 37%);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 2000px;
+            text-align: left;
         }
 
-        h2 {
-            text-align: center;
-            color: #333;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            text-align: left;
+            margin: 30px 30px 0;
+        }
+
+        .header-left h2 {
+            color: #004ba0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header-left p {
+            color: #202020;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 70px;
+            padding: 30px;
         }
 
         .form-group {
@@ -185,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .button-link {
             display: inline-block;
             padding: 10px 15px;
-            background-color: #0d6efd ;
+            background-color: #0d6efd;
             color: white;
             border: none;
             border-radius: 4px;
@@ -208,119 +243,135 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="container">
-        <h2>Form Pengaduan Infrastruktur</h2>
-
-        <div class="alert error"><?php echo $error; ?></div>
-        <?php ; ?>
-
-        <?php if ($sukses): ?>
-            <div class="alert success"><?php echo $sukses; ?></div>
-        <?php endif; ?>
-
-        <form method="POST">
-            <div class="form-group">
-                <label for="nama">Nama Pelapor:</label>
-                <input type="text" name="nama" id="nama" value="<?= htmlspecialchars($nama) ?>" required>
+        <div class="top-section">
+            <div class="header">
+                <div class="header-left">
+                    <a href="Beranda.html"><img src="img/Sidoarjo.png" alt="Logo Desa" width="100" height="97"></a>
+                    <div class="text-content">
+                        <h2>WEBSITE RESMI PENGADUAN INFRASTRUKTUR<br>DESA PEKARUNGAN</h2>
+                        <p>Kecamatan Sukodono, Kabupaten Sidoarjo, Provinsi Jawa Timur</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="StatusAduan.php"><span>Status Aduan</span></a>
+                    <a href="Profile.php"><img src="img/User.png" alt="User Icon" width="50" height="50"></a>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="nohp">Nomor HP:</label>
-                <input type="text" name="nohp" id="nohp" value="<?= htmlspecialchars($nohp) ?>" required
-                    pattern="^[0-9]{10,15}$" title="Nomor HP hanya boleh berisi angka (10–15 digit)">
-            </div>
+            <div class="alert error"><?php echo $error; ?></div>
+            <?php ; ?>
 
-            <div class="form-group">
-                <label for="alamat">Alamat:</label>
-                <textarea name="alamat" id="alamat" rows="3" required><?= htmlspecialchars($alamat) ?></textarea>
-            </div>
+            <?php if ($sukses): ?>
+                <div class="alert success"><?php echo $sukses; ?></div>
+            <?php endif; ?>
 
-            <div class="form-group">
-                <label for="tanggal">Tanggal Kejadian:</label>
-                <input type="date" name="tanggal" id="tanggal" value="<?= htmlspecialchars($tanggal) ?>" required>
-            </div>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="nama">Nama Pelapor:</label>
+                    <input type="text" name="nama" id="nama" value="<?= htmlspecialchars($nama) ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label for="jam">Jam Kejadian:</label>
-                <input type="time" name="jam" id="jam" value="<?= htmlspecialchars($jam) ?>" required>
-            </div>
+                <div class="form-group">
+                    <label for="nohp">Nomor HP:</label>
+                    <input type="text" name="nohp" id="nohp" value="<?= htmlspecialchars($nohp) ?>" required
+                        pattern="^[0-9]{10,15}$" title="Nomor HP hanya boleh berisi angka (10–15 digit)">
+                </div>
 
-            <div class="form-group">
-                <label for="lokasi">Lokasi Kejadian:</label>
-                <input type="text" name="lokasi" id="lokasi" value="<?= htmlspecialchars($lokasi) ?>" required>
-            </div>
+                <div class="form-group">
+                    <label for="alamat">Alamat:</label>
+                    <textarea name="alamat" id="alamat" rows="3" required><?= htmlspecialchars($alamat) ?></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="kategori">Jenis Infrastruktur:</label>
-                <select name="kategori" id="kategori" required>
-                    <option value="">-- Pilih Kategori --</option>    
-                    <option value="Jalan" <?= $kategori == 'Jalan' ? 'selected' : '' ?>>Jalan</option>
-                    <option value="Jembatan" <?= $kategori == 'Jembatan' ? 'selected' : '' ?>>Jembatan</option>
-                    <option value="Saluran Air" <?= $kategori == 'Saluran Air' ? 'selected' : '' ?>>Saluran Air</option>
-                    <option value="Lampu Jalan" <?= $kategori == 'Lampu Jalan' ? 'selected' : '' ?>>Lampu Jalan</option>
-                    <option value="Fasilitas Umum" <?= $kategori == 'Fasilitas Umum' ? 'selected' : '' ?>>Fasilitas Umum
-                    </option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="tanggal">Tanggal Kejadian:</label>
+                    <input type="date" name="tanggal" id="tanggal" value="<?= htmlspecialchars($tanggal) ?>" required>
+                </div>
 
-            <div class="form-group">
-                <label for="deskripsi" class="form-label">Deskripsi Pengaduan</label>
-                <textarea class="form-control" id="deskripsi" name="deskripsi"
-                    rows="3"><?php echo htmlspecialchars($deskripsi ?? ''); ?></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="jam">Jam Kejadian:</label>
+                    <input type="time" name="jam" id="jam" value="<?= htmlspecialchars($jam) ?>" required>
+                </div>
 
-            <div class="form-group">
-                <button type="submit">Kirim Pengaduan</button>
-                <a href="DataAduan.php" class="button-link">Lihat Data Aduan</a>
-                <a href="Beranda.html" class="button-link" style="background-color:#ccc;">Kembali ke Beranda</a>
+                <div class="form-group">
+                    <label for="lokasi">Lokasi Kejadian:</label>
+                    <input type="text" name="lokasi" id="lokasi" value="<?= htmlspecialchars($lokasi) ?>" required>
+                </div>
 
-            </div>
-        </form>
+                <div class="form-group">
+                    <label for="kategori">Jenis Infrastruktur:</label>
+                    <select name="kategori" id="kategori" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="Jalan" <?= $kategori == 'Jalan' ? 'selected' : '' ?>>Jalan</option>
+                        <option value="Jembatan" <?= $kategori == 'Jembatan' ? 'selected' : '' ?>>Jembatan</option>
+                        <option value="Saluran Air" <?= $kategori == 'Saluran Air' ? 'selected' : '' ?>>Saluran Air
+                        </option>
+                        <option value="Lampu Jalan" <?= $kategori == 'Lampu Jalan' ? 'selected' : '' ?>>Lampu Jalan
+                        </option>
+                        <option value="Fasilitas Umum" <?= $kategori == 'Fasilitas Umum' ? 'selected' : '' ?>>Fasilitas
+                            Umum
+                        </option>
+                    </select>
+                </div>
 
-        <script>
-            //Validasi Nama: hanya huruf dan spasi
-            document.addEventListener("DOMContentLoaded", function () {
-                const namaInput = document.getElementById("nama");
-                const namaWarning = document.createElement("div");
-                namaWarning.classList.add("text-danger", "mt-1");
-                namaInput.parentNode.appendChild(namaWarning);
+                <div class="form-group">
+                    <label for="deskripsi" class="form-label">Deskripsi Pengaduan</label>
+                    <textarea class="form-control" id="deskripsi" name="deskripsi"
+                        rows="3"><?php echo htmlspecialchars($deskripsi ?? ''); ?></textarea>
+                </div>
 
-                namaInput.addEventListener("input", function () {
-                    const pattern = /^[a-zA-Z\s]*$/;
-                    const input = this.value;
+                <div class="form-group">
+                    <button type="submit">Kirim Pengaduan</button>
+                    <a href="DataAduan.php" class="button-link">Lihat Data Aduan</a>
+                    <a href="Beranda.html" class="button-link" style="background-color:#ccc;">Kembali ke Beranda</a>
 
-                    if (!pattern.test(input)) {
-                        namaWarning.textContent = "Nama hanya boleh terdiri dari huruf dan spasi.";
-                        this.setCustomValidity("Invalid");
-                    } else {
-                        namaWarning.textContent = "";
-                        this.setCustomValidity("");
-                    }
+                </div>
+            </form>
+
+            <script>
+                //Validasi Nama: hanya huruf dan spasi
+                document.addEventListener("DOMContentLoaded", function () {
+                    const namaInput = document.getElementById("nama");
+                    const namaWarning = document.createElement("div");
+                    namaWarning.classList.add("text-danger", "mt-1");
+                    namaInput.parentNode.appendChild(namaWarning);
+
+                    namaInput.addEventListener("input", function () {
+                        const pattern = /^[a-zA-Z\s]*$/;
+                        const input = this.value;
+
+                        if (!pattern.test(input)) {
+                            namaWarning.textContent = "Nama hanya boleh terdiri dari huruf dan spasi.";
+                            this.setCustomValidity("Invalid");
+                        } else {
+                            namaWarning.textContent = "";
+                            this.setCustomValidity("");
+                        }
+                    });
                 });
-            });
-        </script>
+            </script>
 
-        <script>
-            // Validasi nohp
-            document.addEventListener("DOMContentLoaded", function () {
-                const nohpInput = document.getElementById("nohp");
-                const warningNohp = document.createElement("div");
-                warningNohp.style.color = "red";
-                nohpInput.parentNode.appendChild(warningNohp);
+            <script>
+                // Validasi nohp
+                document.addEventListener("DOMContentLoaded", function () {
+                    const nohpInput = document.getElementById("nohp");
+                    const warningNohp = document.createElement("div");
+                    warningNohp.style.color = "red";
+                    nohpInput.parentNode.appendChild(warningNohp);
 
-                nohpInput.addEventListener("input", function () {
-                    const pattern = /^[0-9]*$/;
-                    const input = this.value;
+                    nohpInput.addEventListener("input", function () {
+                        const pattern = /^[0-9]*$/;
+                        const input = this.value;
 
-                    if (!pattern.test(input)) {
-                        warningNohp.textContent = "Nomor HP hanya boleh berisi angka.";
-                        this.setCustomValidity("Invalid");
-                    } else {
-                        warningNohp.textContent = "";
-                        this.setCustomValidity("");
-                    }
+                        if (!pattern.test(input)) {
+                            warningNohp.textContent = "Nomor HP hanya boleh berisi angka.";
+                            this.setCustomValidity("Invalid");
+                        } else {
+                            warningNohp.textContent = "";
+                            this.setCustomValidity("");
+                        }
+                    });
                 });
-            });
-        </script>
+            </script>
 </body>
 
 </html>
