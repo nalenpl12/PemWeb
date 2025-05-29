@@ -7,54 +7,45 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: DataAduan.php");
+    exit();
+}
+
+$id_aduan = $_GET['id'];
+$id_user = $_SESSION['user_id'];
+
+// Ambil data aduan yang dimiliki user
+$query = "SELECT * FROM pengaduan_infrastruktur WHERE id = ? AND id_user = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ii", $id_aduan, $id_user);
+$stmt->execute();
+$result = $stmt->get_result();
+$aduan = $result->fetch_assoc();
+
+if (!$aduan) {
+    header("Location: DataAduan.php");
+    exit();
+}
+
+// Update jika form dikirim
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_user = $_SESSION['user_id'];
     $tanggal = $_POST['tanggal'];
     $waktu = $_POST['waktu'];
     $lokasi = $_POST['lokasi'];
     $jenis = $_POST['jenis'];
     $deskripsi = $_POST['deskripsi'];
 
-    $gambar_paths = [];
-    $upload_dir = 'uploads/';
+    $update = $conn->prepare("UPDATE pengaduan_infrastruktur SET tanggal = ?, waktu = ?, lokasi = ?, jenis = ?, deskripsi = ? WHERE id = ? AND id_user = ?");
+    $update->bind_param("sssssii", $tanggal, $waktu, $lokasi, $jenis, $deskripsi, $id_aduan, $id_user);
 
-    for ($i = 0; $i < 5; $i++) {
-        if (isset($_FILES['gambar']['name'][$i]) && $_FILES['gambar']['name'][$i] !== '') {
-            $file_tmp = $_FILES['gambar']['tmp_name'][$i];
-            $file_name = time() . '_' . basename($_FILES['gambar']['name'][$i]);
-            $target_path = $upload_dir . $file_name;
-
-            if (move_uploaded_file($file_tmp, $target_path)) {
-                $gambar_paths[] = $file_name;
-            } else {
-                $gambar_paths[] = null;
-            }
-        } else {
-            $gambar_paths[] = null;
-        }
+    if ($update->execute()) {
+        header("Location: DataAduan.php");
+        exit();
+    } else {
+        echo "Gagal memperbarui data.";
     }
-
-    $stmt = $conn->prepare("INSERT INTO pengaduan_infrastruktur (id_user, tanggal, waktu, lokasi, jenis, deskripsi, gambar_1, gambar_2, gambar_3, gambar_4, gambar_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param(
-        "issssssssss",
-        $id_user,
-        $tanggal,
-        $waktu,
-        $lokasi,
-        $jenis,
-        $deskripsi,
-        $gambar_paths[0],
-        $gambar_paths[1],
-        $gambar_paths[2],
-        $gambar_paths[3],
-        $gambar_paths[4]
-    );
-
-    if ($stmt->execute()) {
-        header("Location: form_pengaduan.php?success=sent");
-        exit;
-    }
-}
+} 
 ?>
 
 <!DOCTYPE html>
@@ -62,8 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Pengaduan Infrastruktur</title>
+    <title>Ubah Aduan</title>
     <style>
         * {
             margin: 0;
@@ -240,22 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: background-color 0.3s ease;
         }
 
-        .btn-yellow {
-            background-color: orange;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-yellow:hover {
-            background-color: rgb(182, 121, 8);
-        }
-
         .btn-blue:hover {
             background-color: #00295f;
         }
@@ -275,33 +249,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             max-width: 400px;
             height: auto;
         }
-
-        .success-message {
-            background-color: #d4edda;
-            color: rgb(5, 187, 47);
-            border: 1px solid #c3e6cb;
-            padding: 12px 20px;
-            margin: 20px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            animation: fadeOut 0.5s ease-out 3s forwards;
-        }
-
-        @keyframes fadeOut {
-
-            0%,
-            70% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-                display: none;
-            }
-        }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div class="top-section">
@@ -319,9 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
-        <?php if (isset($_GET['success']) && $_GET['success'] == 'sent'): ?>
-            <div class="success-message">Pengaduan berhasil dikirim.</div>
-        <?php endif; ?>
         <form method="POST" enctype="multipart/form-data">
             <div class="title">
                 Laporkan Infrastruktur Desa Pekarungan
@@ -333,40 +279,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-body">
                 <div class="box-left">
                     <label for="tanggal">Tanggal Kejadian</label>
-                    <input type="date" name="tanggal" id="tanggal" required>
+                    <input type="date" name="tanggal" id="tanggal" value="<?= $aduan['tanggal'] ?>" required>
 
                     <label for="waktu">Waktu Kejadian</label>
-                    <input type="time" name="waktu" id="waktu" required>
+                    <input type="time" name="waktu" id="waktu" value="<?= $aduan['waktu'] ?>" required>
 
-                    <label for="lokasi">Lokasi Kejadian (jalan & RT/RW)</label>
-                    <input type="text" name="lokasi" id="lokasi" required>
+                    <label for="lokasi">Lokasi Kejadian</label>
+                    <input type="text" name="lokasi" id="lokasi" value="<?= $aduan['lokasi'] ?>" required>
 
                     <label for="jenis">Jenis Infrastruktur</label>
                     <select name="jenis" id="jenis" required>
-                        <option value="">-- Pilih --</option>
-                        <option value="Jalan">Jalan</option>
-                        <option value="Jembatan">Jembatan</option>
-                        <option value="Saluran Air">Saluran Air</option>
-                        <option value="Lampu Jalan">Lampu Jalan</option>
-                        <option value="Fasilitas Umum">Fasilitas Umum</option>
-                        <option value="Lainnya">Lainnya</option>
+                        <?php
+                        $options = ['Jalan', 'Jembatan', 'Saluran Air', 'Lampu Jalan', 'Fasilitas Umum', 'Lainnya'];
+                        foreach ($options as $opt) {
+                            $selected = ($aduan['jenis'] === $opt) ? 'selected' : '';
+                            echo "<option value='$opt' $selected>$opt</option>";
+                        }
+                        ?>
                     </select>
                 </div>
                 <div class="box-right">
-                    <label for="deskripsi">Deskripsi Pengaduan (optional)</label>
-                    <textarea name="deskripsi" id="deskripsi"></textarea>
-
-                    <label for="gambar">Bukti Pendukung (maks. 5 gambar)</label>
-                    <input type="file" name="gambar[]" id="gambar" accept="image/*" multiple>
+                    <label for="deskripsi">Deskripsi</label>
+                    <textarea name="deskripsi" id="deskripsi"><?= htmlspecialchars($aduan['deskripsi']) ?></textarea>
                 </div>
                 <div class="illustration">
                     <img src="img/pengaduan.png" alt="Ilustrasi Form">
                 </div>
             </div>
             <div class="buttons">
-                <button type="button" class="btn-red" onclick="window.location.href='Beranda.html'">Kembali</button>
-                <button type="submit" class="btn-blue">Kirim</button>
-                <button class="btn-yellow" onclick="window.location.href='DataAduan.php'">Daftar Aduan</button>
+                <button type="button" class="btn-red" onclick="window.location.href='DataAduan.php'">Batal</button>
+                <button type="submit" class="btn-blue">Simpan Perubahan</button>
             </div>
         </form>
     </div>
