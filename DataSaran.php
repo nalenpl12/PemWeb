@@ -119,6 +119,18 @@ $result = $stmt->get_result();
             background-color: white;
         }
 
+        .deskripsi {
+            max-width: 400px;
+            word-break: break-word;
+            white-space: normal;
+            height: 70px;
+            display: block;
+            overflow-y: auto;
+            padding: 2px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
         table,
         th,
         td {
@@ -273,7 +285,9 @@ $result = $stmt->get_result();
                                 <td><?= htmlspecialchars($row['jenis_pembangunan']); ?></td>
                                 <td><?= htmlspecialchars($row['lokasi_rt_rw']); ?></td>
                                 <td><?= htmlspecialchars($row['lokasi_detail']); ?></td>
-                                <td><?= htmlspecialchars($row['deskripsi']); ?></td>
+                                <td>
+                                    <div class="deskripsi"><?= nl2br(htmlspecialchars($row['deskripsi'])); ?></div>
+                                </td>
                                 <td class="aksi">
                                     <a href="HapusSaran.php?id=<?= $row['id']; ?>"
                                         onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
@@ -289,7 +303,7 @@ $result = $stmt->get_result();
             </table>
         </div>
         <div class="buttons">
-            <button class="btn-red" onclick="window.location.href='Beranda.html'">Kembali</button>
+            <button class="btn-red" onclick="window.location.href='Beranda.html'">Beranda</button>
             <button class="btn-yellow" onclick="window.print()">Cetak</button>
             <button class="btn-blue" onclick="window.location.href='form_saran.php'">Buat Saran</button>
         </div>

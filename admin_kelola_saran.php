@@ -2,42 +2,25 @@
 session_start();
 include 'db.php';
 
-// Cek jika admin belum login
+// Cek apakah admin sudah login
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: FormLogin.php");
     exit();
 }
 
-// Handle perubahan status
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ubah_status'])) {
-    $id_aduan = $_POST['id_aduan'];
-    $status_baru = $_POST['status'];
-
-    $update = $conn->prepare("UPDATE pengaduan_infrastruktur SET status = ? WHERE id = ?");
-    $update->bind_param("si", $status_baru, $id_aduan);
-    $update->execute();
-    header("Location: admin_kelola_pengaduan.php?success=updated");
-    exit();
-}
-
-// Handle hapus
+// Proses hapus data saran jika diminta
 if (isset($_GET['hapus'])) {
-    $id_hapus = $_GET['hapus'];
-    $hapus = $conn->prepare("DELETE FROM pengaduan_infrastruktur WHERE id = ?");
+    $id_hapus = intval($_GET['hapus']);
+    $hapus = $conn->prepare("DELETE FROM saran_pembangunan WHERE id = ?");
     $hapus->bind_param("i", $id_hapus);
     $hapus->execute();
-    header("Location: admin_kelola_pengaduan.php?success=deleted");
+    header("Location: admin_kelola_saran.php?success=deleted");
     exit();
 }
 
-// Ambil semua data pengaduan + nama user
-$query = "
-    SELECT p.*, u.nama 
-    FROM pengaduan_infrastruktur p
-    JOIN users u ON p.id_user = u.id
-    ORDER BY p.tanggal DESC
-";
-$result = $conn->query($query);
+// Ambil semua data saran dari user
+$query = "SELECT saran_pembangunan.*, users.nama FROM saran_pembangunan JOIN users ON saran_pembangunan.id_user = users.id ORDER BY saran_pembangunan.id ASC";
+$result = mysqli_query($conn, $query);
 ?>
 
 <!DOCTYPE html>
@@ -45,7 +28,7 @@ $result = $conn->query($query);
 
 <head>
     <meta charset="UTF-8">
-    <title>Kelola Pengaduan</title>
+    <title>Kelola Saran Pembangunan</title>
     <style>
         * {
             margin: 0;
@@ -142,22 +125,15 @@ $result = $conn->query($query);
             word-break: break-word;
         }
 
-        table,
         th,
         td {
             border: 1px solid #ccc;
-        }
-
-        th,
-        td {
             padding: 10px;
             text-align: center;
         }
 
-        select,
-        button {
-            padding: 6px 10px;
-            border-radius: 5px;
+        th {
+            background-color: #e3f2fd;
         }
 
         .buttons {
@@ -197,27 +173,14 @@ $result = $conn->query($query);
         .btn-delete {
             background-color: red;
             color: white;
+            padding: 6px 12px;
             border: none;
-            padding: 6px 10px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
 
         .btn-delete:hover {
             background-color: darkred;
-        }
-
-        .btn-update {
-            background-color: #0d6efd;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .btn-update:hover {
-            background-color: #003ea8;
         }
 
         .success-message {
@@ -260,75 +223,43 @@ $result = $conn->query($query);
             </div>
         </div>
         <div class="title">
-            Data Pengaduan Infrastruktur Desa Pekarungan
+            Data Saran Pembangunan Infrastruktur Desa Pekarungan
         </div>
-        <?php if (isset($_GET['success']) && $_GET['success'] === 'updated'): ?>
-            <div class="success-message">✅ Status berhasil diperbarui.</div>
-        <?php elseif (isset($_GET['success']) && $_GET['success'] === 'deleted'): ?>
-            <div class="success-message">✅ Data berhasil dihapus.</div>
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'deleted'): ?>
+            <div class="success-message">Saran berhasil dihapus.</div>
         <?php endif; ?>
         <div class="form-body">
             <table>
                 <thead>
                     <tr>
-                        <th>Nama User</th>
-                        <th>Tanggal</th>
-                        <th>Waktu</th>
-                        <th>Lokasi</th>
-                        <th>Jenis</th>
+                        <th>Nama Pengguna</th>
+                        <th>Jenis Pembangunan</th>
+                        <th>Lokasi RT/RW</th>
+                        <th>Lokasi Detail</th>
                         <th>Deskripsi</th>
-                        <th>Bukti Gambar</th>
-                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php if (mysqli_num_rows($result) > 0): ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
                             <tr>
-                                <td><?= htmlspecialchars($row['nama']); ?></td>
-                                <td><?= $row['tanggal']; ?></td>
-                                <td><?= $row['waktu']; ?></td>
-                                <td><?= $row['lokasi']; ?></td>
-                                <td><?= $row['jenis']; ?></td>
+                                <td><?= htmlspecialchars($row['nama']) ?></td>
+                                <td><?= htmlspecialchars($row['jenis_pembangunan']) ?></td>
+                                <td><?= htmlspecialchars($row['lokasi_rt_rw']) ?></td>
+                                <td><?= htmlspecialchars($row['lokasi_detail']) ?></td>
                                 <td>
-                                    <div class="deskripsi"><?= $row['deskripsi']; ?></div>
+                                    <div class="deskripsi"><?= htmlspecialchars($row['deskripsi']) ?></div>
                                 </td>
                                 <td>
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <?php if (!empty($row["gambar_$i"])): ?>
-                                            <a href="#" onclick="showImage('uploads/<?= $row["gambar_$i"] ?>'); return false;">Lihat
-                                                Gambar
-                                                <?= $i ?></a><br>
-                                        <?php endif; ?>
-                                    <?php endfor; ?>
-                                </td>
-
-                                <td>
-                                    <form method="POST" style="display: flex; gap: 5px;">
-                                        <input type="hidden" name="id_aduan" value="<?= $row['id']; ?>">
-                                        <select name="status">
-                                            <option value="Diajukan" <?= $row['status'] === 'Diajukan' ? 'selected' : ''; ?>>
-                                                Diajukan
-                                            </option>
-                                            <option value="Diproses" <?= $row['status'] === 'Diproses' ? 'selected' : ''; ?>>
-                                                Diproses
-                                            </option>
-                                            <option value="Selesai" <?= $row['status'] === 'Selesai' ? 'selected' : ''; ?>>Selesai
-                                            </option>
-                                        </select>
-                                        <button type="submit" name="ubah_status" class="btn-update">Ubah</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <a href="?hapus=<?= $row['id']; ?>"
-                                        onclick="return confirm('Yakin ingin menghapus data ini?')" class="btn-delete">Hapus</a>
+                                    <a href="?hapus=<?= $row['id'] ?>" class="btn-delete"
+                                        onclick="return confirm('Yakin ingin menghapus saran ini?')">Hapus</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8">Belum ada data pengaduan.</td>
+                            <td colspan="6">Belum ada data saran pembangunan.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -337,27 +268,6 @@ $result = $conn->query($query);
         <div class="buttons">
             <button class="btn-red" onclick="window.location.href='admin_dashboard.php'">Kembali</button>
         </div>
-        <!-- Modal Gambar -->
-        <div id="imageModal"
-            style="display: none; position: fixed; z-index: 1000; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center;">
-            <div style="position: relative;">
-                <img id="modalImage" src="" alt="Gambar"
-                    style="max-width:90vw; max-height:90vh; border: 5px solid white; border-radius: 8px;">
-                <span onclick="hideImage()"
-                    style="position:absolute; top:-10px; right:-10px; background: white; color: red; font-weight: bold; padding: 5px 10px; cursor: pointer; border-radius: 50%;">X</span>
-            </div>
-        </div>
-        <script>
-            function showImage(src) {
-                document.getElementById("modalImage").src = src;
-                document.getElementById("imageModal").style.display = "flex";
-            }
-
-            function hideImage() {
-                document.getElementById("imageModal").style.display = "none";
-                document.getElementById("modalImage").src = '';
-            }
-        </script>
     </div>
 </body>
 

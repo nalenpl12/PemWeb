@@ -55,7 +55,7 @@ $result = $stmt->get_result();
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             align-items: center;
         }
 
@@ -196,7 +196,6 @@ $result = $stmt->get_result();
         .btn-red:hover {
             background-color: rgb(152, 16, 16);
         }
-        
     </style>
 </head>
 

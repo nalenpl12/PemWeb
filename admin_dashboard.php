@@ -189,7 +189,7 @@ $nama = $_SESSION['nama'];
                     <div class="card">
                         <h2>Kelola Saran Pembangunan</h2>
                         <p>Lihat semua saran pembangunan dari pengguna.</p>
-                        <a href="StatistikPengaduan.php">Lihat Statistik</a>
+                        <a href="admin_kelola_saran.php">Lihat Statistik</a>
                     </div>
                     <div class="card">
                         <h2>Pengaturan Sistem</h2>

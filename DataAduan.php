@@ -122,6 +122,18 @@ $result = $stmt->get_result();
             background-color: white;
         }
 
+        .deskripsi {
+            max-width: 200px;
+            word-break: break-word;
+            white-space: normal;
+            height: 70px;
+            display: block;
+            overflow-y: auto;
+            padding: 2px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
         table,
         th,
         td {
@@ -130,7 +142,7 @@ $result = $stmt->get_result();
 
         th,
         td {
-            padding: 10px;
+            padding: 5px;
             text-align: center;
         }
 
@@ -207,7 +219,7 @@ $result = $stmt->get_result();
         }
 
         .btn-yellow:hover {
-            background-color:rgb(182, 121, 8);
+            background-color: rgb(182, 121, 8);
         }
 
         .success-message {
@@ -280,7 +292,9 @@ $result = $stmt->get_result();
                                 <td><?= htmlspecialchars($row['waktu']); ?></td>
                                 <td><?= htmlspecialchars($row['lokasi']); ?></td>
                                 <td><?= htmlspecialchars($row['jenis']); ?></td>
-                                <td><?= nl2br(htmlspecialchars($row['deskripsi'])); ?></td>
+                                <td>
+                                    <div class="deskripsi"><?= nl2br(htmlspecialchars($row['deskripsi'])); ?></div>
+                                </td>
                                 <td>
                                     <?php
                                     for ($i = 1; $i <= 5; $i++) {
@@ -313,4 +327,5 @@ $result = $stmt->get_result();
         </div>
     </div>
 </body>
+
 </html>
