@@ -177,12 +177,12 @@ $nama = $_SESSION['nama'];
                     <div class="card">
                         <h2>Kelola Pengaduan</h2>
                         <p>Lihat semua pengaduan dari pengguna.</p>
-                        <a href="KelolaPengaduan.php">Masuk ke Manajemen Pengaduan</a>
+                        <a href="admin_kelola_pengaduan.php">Masuk ke Manajemen Pengaduan</a>
                     </div>
                     <div class="card">
                         <h2>Data Pengguna</h2>
                         <p>Lihat informasi semua pengguna sistem.</p>
-                        <a href="DataPengguna.php">Lihat Daftar Pengguna</a>
+                        <a href="admin_data_user.php">Lihat Daftar Pengguna</a>
                     </div>
                 </div>
                 <div class="form-body_2">
@@ -194,7 +194,7 @@ $nama = $_SESSION['nama'];
                     <div class="card">
                         <h2>Pengaturan Sistem</h2>
                         <p>Kelola pengaturan sistem dan konfigurasi.</p>
-                        <a href="PengaturanSistem.php">Masuk ke Pengaturan</a>
+                        <a href="#">Masuk ke Pengaturan</a>
                     </div>
                 </div>
                 <div class="form-body_3">
