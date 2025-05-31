@@ -1,9 +1,21 @@
 <?php
-include 'koneksi.php';
+session_start();
+include 'db.php';
 
-// Ambil semua data aduan
-$sql = "SELECT * FROM aduan ORDER BY tanggal DESC, jam DESC";
-$result = mysqli_query($koneksi, $sql);
+if (!isset($_SESSION['user_id'])) {
+    header("Location: FormLogin.php");
+    exit();
+}
+
+$id_user = $_SESSION['user_id'];
+$user = $_SESSION['nama'];
+
+// Ambil data pengaduan user
+$query = "SELECT * FROM pengaduan_infrastruktur WHERE id_user = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $id_user);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -11,141 +23,240 @@ $result = mysqli_query($koneksi, $sql);
 
 <head>
     <meta charset="UTF-8">
-    <title>Status Aduan Infrastruktur</title>
+    <title>Status Pengaduan</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
         body {
-            background: linear-gradient(to right, #FFECDB, #77CDFF);
-            font-family: Arial, sans-serif;
+            position: relative;
+            background: linear-gradient(to bottom, #0366d6, #d0e5f9);
+            min-height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
 
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
+            background: linear-gradient(to bottom, #AFDDFF 10%, #FBFFFF 37%);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 2000px;
+            text-align: left;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            text-align: left;
+            margin: 30px 30px 0;
+        }
+
+        .header-left h2 {
+            color: #004ba0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header-left p {
+            color: #202020;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 70px;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 30px;
+            font-weight: 700;
+            color: rgb(0, 0, 0);
+            margin: 30px 30px 30px;
+        }
+
+        .form-body {
+            display: flex;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-bottom: 5px;
         }
 
         h2 {
-            text-align: center;
             margin-bottom: 20px;
+            color: #000;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            background-color: white;
         }
 
-        .badge {
-            border-radius: 5px;
-            font-size: 0.85em;
-            padding: 5px 10px;
-            background-color: darkgrey;
-        }
-
-        .status-belum {
-            background-color: #6c757d;
-            /* abu */
-        }
-
-        .btn-kembali {
-            display: inline-block;
-            background-color: #e2e2e2;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
+        table,
+        th,
+        td {
+            border: 1px solid #999;
         }
 
         th,
         td {
-            padding: 12px 15px;
-            border: 1px solid #ccc;
+            padding: 10px;
             text-align: center;
         }
 
-        th {
-            background-color: #2563EB;
+        .status {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
-        tr:nth-child(even) {
-            background-color: #f0f7ff;
+        .status.Diajukan {
+            background-color: #ffc107;
+            color: #000;
         }
 
-        .btn-kembali:hover {
-            background-color: #5a6268;
+        .status.Diproses {
+            background-color: #0d6efd;
+            color: #fff;
         }
 
-        thead th {
-            background-color: #2563EB;
+        .status.Selesai {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-bottom: 30px;
+        }
+
+        .buttons button {
+            padding: 10px 10px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 150px;
+        }
+
+        .btn-red {
+            background-color: rgb(255, 12, 12);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 8px;
             color: white;
-            padding: 12px;
-            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
+
+        .btn-blue {
+            background-color: #0d6efd;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-blue:hover {
+            background-color: #00295f;
+        }
+
+        .btn-red:hover {
+            background-color: rgb(152, 16, 16);
+        }
+        
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h2 class="mb-4 text-center">Status Pengaduan Infrastruktur</h2>
-
-        <?php if (mysqli_num_rows($result) > 0): ?>
+        <div class="top-section">
+            <div class="header">
+                <div class="header-left">
+                    <a href="Beranda.html"><img src="img/Sidoarjo.png" alt="Logo Desa" width="100" height="97"></a>
+                    <div class="text-content">
+                        <h2>WEBSITE RESMI PENGADUAN INFRASTRUKTUR<br>DESA PEKARUNGAN</h2>
+                        <p>Kecamatan Sukodono, Kabupaten Sidoarjo, Provinsi Jawa Timur</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <a href="Profile.php"><img src="img/User.png" alt="User Icon" width="50" height="50"></a>
+                </div>
+            </div>
+        </div>
+        <div class="title">
+            Status Pengaduanmu <?= htmlspecialchars($user); ?>
+        </div>
+        <div class="form-body">
             <table>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Lokasi</th>
-                    <th>Kategori</th>
-                    <th>Tanggal</th>
-                    <th>Status</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Waktu</th>
+                        <th>Lokasi</th>
+                        <th>Jenis Infrastruktur</th>
+                        <th>Deskripsi</th>
+                        <th>Status</th>
+                    </tr>
                 </thead>
-
                 <tbody>
-                    <?php
-                    $no = 1;
-                    while ($row = mysqli_fetch_assoc($result)):
-                        $status = $row['status'] ?? 'Diajukan'; // default status
-                        ?>
-
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['tanggal']); ?></td>
+                                <td><?= htmlspecialchars($row['waktu']); ?></td>
+                                <td><?= htmlspecialchars($row['lokasi']); ?></td>
+                                <td><?= htmlspecialchars($row['jenis']); ?></td>
+                                <td><?= htmlspecialchars($row['deskripsi']); ?></td>
+                                <td><span
+                                        class="status <?= htmlspecialchars($row['status']); ?>"><?= htmlspecialchars($row['status']); ?></span>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
                         <tr>
-                            <td class="text-center"><?= $no++; ?></td>
-                            <td><?= htmlspecialchars($row['nama']); ?></td>
-                            <td><?= htmlspecialchars($row['lokasi']); ?></td>
-                            <td><?= htmlspecialchars($row['kategori']); ?></td>
-                            <td><?= htmlspecialchars($row['tanggal']) . ' ' . htmlspecialchars($row['jam']); ?></td>
-                            <td class="text-center">
-                                <span class="badge <?= $badgeClass ?>">
-                                    <?= $status ?>
-                                </span>
-                            </td>
+                            <td colspan="6">Belum ada data pengaduan.</td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endif; ?>
                 </tbody>
-
             </table>
-
-            <a href="form_pengaduan.php"
-                style="display: inline-block; padding: 10px 20px; background-color: #e2e2e2; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                Kembali ke Form
-                <a href="Beranda.html"
-                    style="display: inline-block; padding: 10px 20px; background-color: #0d6efd; color: #333; border-radius: 5px; text-decoration: none; font-weight: bold;">
-                    Kembali ke Beranda
-                </a>
-
         </div>
-
-    <?php else: ?>
-        <div class="alert alert-info text-center">
-            Belum ada data pengaduan yang masuk.
+        <div class="buttons">
+            <button class="btn-red" onclick="window.location.href='Beranda.html'">Beranda</button>
+            <button class="btn-blue" onclick="window.location.href='form_pengaduan.php'">Buat Aduan</button>
         </div>
-    <?php endif; ?>
     </div>
 </body>
 

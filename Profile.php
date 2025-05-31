@@ -236,7 +236,7 @@ $tampilAlamat = !empty($alamat) ? htmlspecialchars($alamat) : 'xxxxx';
                     <div class="aduan">
                         <h3>Aduan dan Saran</h3>
                         <button class="btnbiru" onclick="location.href='DataAduan.php'">Daftar Aduan</button>
-                        <button class="btnbiru" onclick="location.href='FormStatusUsulanPembangunan.php'">Status Usulan</button>
+                        <button class="btnbiru" onclick="location.href='DataSaran.php'">Daftar Saran</button>
                         <button class="btnbiru" onclick="location.href='StatusAduan.php'">Status Aduan</button>
                     </div>
                     <div class="akun">
