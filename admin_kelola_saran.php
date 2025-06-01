@@ -111,6 +111,7 @@ $result = mysqli_query($conn, $query);
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            background-color: white
         }
 
         .deskripsi {
@@ -128,12 +129,12 @@ $result = mysqli_query($conn, $query);
         th,
         td {
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 5px;
             text-align: center;
         }
 
         th {
-            background-color: #e3f2fd;
+            background-color: #e0e0e0;
         }
 
         .buttons {

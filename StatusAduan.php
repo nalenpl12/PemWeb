@@ -113,6 +113,19 @@ $result = $stmt->get_result();
             background-color: white;
         }
 
+        .deskripsi {
+            max-width: 300px;
+            word-break: break-word;
+            white-space: normal;
+            height: 70px;
+            display: block;
+            overflow-y: auto;
+            padding: 2px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+
         table,
         th,
         td {
@@ -123,6 +136,10 @@ $result = $stmt->get_result();
         td {
             padding: 10px;
             text-align: center;
+        }
+
+        th {
+            background-color: #e0e0e0;
         }
 
         .status {
@@ -238,7 +255,9 @@ $result = $stmt->get_result();
                                 <td><?= htmlspecialchars($row['waktu']); ?></td>
                                 <td><?= htmlspecialchars($row['lokasi']); ?></td>
                                 <td><?= htmlspecialchars($row['jenis']); ?></td>
-                                <td><?= htmlspecialchars($row['deskripsi']); ?></td>
+                                <td>
+                                    <div class="deskripsi"><?= htmlspecialchars($row['deskripsi']); ?></div>
+                                </td>
                                 <td><span
                                         class="status <?= htmlspecialchars($row['status']); ?>"><?= htmlspecialchars($row['status']); ?></span>
                                 </td>

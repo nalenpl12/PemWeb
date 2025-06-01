@@ -128,6 +128,7 @@ $result = $conn->query($query);
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
+            background-color: white;
         }
 
         .deskripsi {
@@ -145,13 +146,17 @@ $result = $conn->query($query);
         table,
         th,
         td {
-            border: 1px solid #ccc;
+            border: 1px solid #999;
         }
 
         th,
         td {
-            padding: 10px;
+            padding: 5px;
             text-align: center;
+        }
+
+        th {
+            background-color: #e0e0e0;
         }
 
         select,
