@@ -221,7 +221,6 @@
                     <div class="form-group">
                         <input type="password" name="password" placeholder="Kata Sandi" required>
                     </div>
-
                     <button type="submit">Masuk</button>
                 </form>
                 <p>Belum punya akun? <a href="#" onclick="showRegister()">Buat Akun</a></p>
